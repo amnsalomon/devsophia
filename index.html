@@ -1,0 +1,1346 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guia de Integração · SophIA Interviews API</title>
+  <meta name="description" content="Guia de integração da Interviews API 2.1.0 da SophIA: autenticação, endpoints, dicionário de dados, exemplos de código, boas práticas e suporte.">
+  <meta name="theme-color" content="#7050ed">
+  <meta property="og:title" content="SophIA · Guia de Integração — Interviews API">
+  <meta property="og:description" content="Documentação para desenvolvedores de empresas parceiras. API 2.1.0 · Setembro de 2026.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topbar">
+    <a class="brand" href="#guia-de-integração-—-interviews-api" aria-label="SophIA, início da documentação"><img src="assets/favicon.svg" width="36" height="36" alt=""><span>Soph<span class="brand-ia">IA</span><small>by StarMind</small></span></a>
+    <span class="header-divider" aria-hidden="true"></span><span class="header-label">Developers</span>
+    <div class="search-wrap">
+      <label for="search" class="sr-only">Buscar na documentação</label>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input id="search" type="search" placeholder="Buscar na documentação…" autocomplete="off" aria-controls="search-panel" aria-expanded="false" disabled><kbd aria-hidden="true">/</kbd>
+      <div id="search-panel" class="search-panel" role="region" aria-label="Resultados da busca" hidden><p id="search-status" role="status"></p><div id="search-results"></div></div>
+    </div>
+    <a class="sophia-link" href="https://sophia.starmindai.ai/">Conheça a SophIA <span aria-hidden="true">↗</span></a>
+    <button class="menu-toggle" type="button" aria-controls="sidebar" aria-expanded="false">Menu <span aria-hidden="true">☰</span></button>
+    <div class="reading-track" aria-hidden="true"><div id="reading-progress"></div></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="Navegação da documentação">
+      <div class="sidebar-heading"><span class="eyebrow">DOCUMENTAÇÃO</span><div>Interviews API <span class="version">v2.1.0</span></div></div>
+      <nav aria-label="Guia de integração">
+        <a class="nav-overview" href="#guia-de-integração-—-interviews-api"><span aria-hidden="true">⌂</span> Visão geral</a>
+        <div class="nav-group" data-group="o-que-mudou-na-210"><a class="nav-link" href="#o-que-mudou-na-210"><span class="nav-number" aria-hidden="true">01</span><span>O que mudou na 2.1.0</span></a></div>
+<div class="nav-group" data-group="antes-de-começar"><a class="nav-link" href="#antes-de-começar"><span class="nav-number" aria-hidden="true">02</span><span>Antes de começar</span></a><div class="subnav"><a href="#o-que-você-vai-precisar">O que você vai precisar</a><a href="#o-que-você-vai-receber">O que você vai receber</a><a href="#isolamento-de-dados">Isolamento de dados</a><a href="#identificadores-id-da-entrevista-vs-codigo-da-vaga">Identificadores: id da entrevista vs codigo da vaga</a></div></div>
+<div class="nav-group" data-group="autenticação"><a class="nav-link" href="#autenticação"><span class="nav-number" aria-hidden="true">03</span><span>Autenticação</span></a><div class="subnav"><a href="#cuidados-com-a-chave">Cuidados com a chave</a><a href="#o-que-pode-dar-errado">O que pode dar errado</a></div></div>
+<div class="nav-group" data-group="convenções-gerais"><a class="nav-link" href="#convenções-gerais"><span class="nav-number" aria-hidden="true">04</span><span>Convenções gerais</span></a><div class="subnav"><a href="#base-url">Base URL</a><a href="#formato">Formato</a><a href="#datas-e-fuso-horário">Datas e fuso horário</a><a href="#envelope-de-resposta">Envelope de resposta</a></div></div>
+<div class="nav-group" data-group="rate-limiting"><a class="nav-link" href="#rate-limiting"><span class="nav-number" aria-hidden="true">05</span><span>Rate limiting</span></a><div class="subnav"><a href="#recomendações">Recomendações</a></div></div>
+<div class="nav-group" data-group="endpoints"><a class="nav-link" href="#endpoints"><span class="nav-number" aria-hidden="true">06</span><span>Endpoints</span></a><div class="subnav"><a href="#get--—-informações-da-api">GET / — Informações da API</a><a href="#get-health-—-verificação-de-saúde">GET /health — Verificação de saúde</a><a href="#get-apiv1interviews-—-listar-entrevistas">GET /api/v1/interviews — Listar entrevistas</a><a href="#get-apiv1interviewslatest-—-última-entrevista">GET /api/v1/interviews/latest — Última entrevista</a><a href="#get-apiv1jobs-—-listar-vagas">GET /api/v1/jobs — Listar vagas</a></div></div>
+<div class="nav-group" data-group="dicionário-de-dados"><a class="nav-link" href="#dicionário-de-dados"><span class="nav-number" aria-hidden="true">07</span><span>Dicionário de dados</span></a><div class="subnav"><a href="#status-de-processamento-de-uma-entrevista">Status de processamento de uma entrevista</a><a href="#campos-de-candidate">Campos de candidate</a><a href="#campos-de-candidateaddress">Campos de candidate.address</a><a href="#campos-de-job-dentro-da-entrevista">Campos de job (dentro da entrevista)</a><a href="#campos-de-interview">Campos de interview</a><a href="#campos-de-results">Campos de results</a><a href="#campos-de-vagas-apiv1jobs">Campos de vagas (/api/v1/jobs)</a></div></div>
+<div class="nav-group" data-group="tratamento-de-erros"><a class="nav-link" href="#tratamento-de-erros"><span class="nav-number" aria-hidden="true">08</span><span>Tratamento de erros</span></a><div class="subnav"><a href="#estratégia-de-retry">Estratégia de retry</a></div></div>
+<div class="nav-group" data-group="exemplos-de-código"><a class="nav-link" href="#exemplos-de-código"><span class="nav-number" aria-hidden="true">09</span><span>Exemplos de código</span></a><div class="subnav"><a href="#curl">cURL</a><a href="#nodejs-fetch-nativo-node-18">Node.js (fetch nativo, Node 18+)</a><a href="#nodejs-—-sincronização-completa-com-paginação">Node.js — sincronização completa com paginação</a><a href="#nodejs-—-polling-para-detectar-novas-entrevistas-recomendado">Node.js — polling para detectar novas entrevistas (recomendado)</a><a href="#nodejs-—-polling-simples-com-latest">Node.js — polling simples com /latest</a><a href="#python-requests">Python (requests)</a><a href="#python-—-retry-com-backoff-exponencial">Python — retry com backoff exponencial</a></div></div>
+<div class="nav-group" data-group="boas-práticas"><a class="nav-link" href="#boas-práticas"><span class="nav-number" aria-hidden="true">10</span><span>Boas práticas</span></a><div class="subnav"><a href="#sincronização-incremental-vs-completa">Sincronização incremental vs completa</a><a href="#cache-de-vagas">Cache de vagas</a><a href="#aguardando-o-processamento-da-ia">Aguardando o processamento da IA</a><a href="#charset-e-encoding">Charset e encoding</a><a href="#logs-e-privacidade">Logs e privacidade</a></div></div>
+<div class="nav-group" data-group="lgpd-e-proteção-de-dados"><a class="nav-link" href="#lgpd-e-proteção-de-dados"><span class="nav-number" aria-hidden="true">11</span><span>LGPD e proteção de dados</span></a><div class="subnav"><a href="#dados-pessoais-expostos">Dados pessoais expostos</a><a href="#suas-responsabilidades">Suas responsabilidades</a><a href="#recomendações-técnicas">Recomendações técnicas</a></div></div>
+<div class="nav-group" data-group="versionamento-e-changelog"><a class="nav-link" href="#versionamento-e-changelog"><span class="nav-number" aria-hidden="true">12</span><span>Versionamento e changelog</span></a><div class="subnav"><a href="#política-de-versionamento">Política de versionamento</a><a href="#changelog">Changelog</a></div></div>
+<div class="nav-group" data-group="suporte"><a class="nav-link" href="#suporte"><span class="nav-number" aria-hidden="true">13</span><span>Suporte</span></a><div class="subnav"><a href="#canais">Canais</a><a href="#antes-de-abrir-um-chamado">Antes de abrir um chamado</a><a href="#sla-e-disponibilidade">SLA e disponibilidade</a></div></div>
+<div class="nav-group" data-group="glossário"><a class="nav-link" href="#glossário"><span class="nav-number" aria-hidden="true">14</span><span>Glossário</span></a></div>
+      </nav>
+      <div class="sidebar-footer"><a href="guia-integracao-original.md" download>Baixar caderno original <span aria-hidden="true">↓</span></a><span>Atualizado em setembro de 2026</span></div>
+    </aside>
+    <button class="sidebar-overlay" type="button" aria-label="Fechar menu" tabindex="-1" hidden></button>
+    <main id="conteudo" tabindex="-1">
+      <div class="document-topline"><span class="eyebrow">SOPHIA / INTEGRAÇÕES</span><span class="readonly"><span aria-hidden="true"></span> API somente leitura</span></div>
+      <article class="document" aria-label="Caderno de integração completo"><section class="doc-section intro" data-section="intro"><h1 id="guia-de-integração-—-interviews-api" tabindex="-1">Guia de Integração — Interviews API</h1>
+<p><strong>Versão da API:</strong> 2.1.0 · <strong>Última atualização:</strong> Setembro de 2026<br>
+<strong>Audiência:</strong> desenvolvedores de empresas parceiras<br>
+<strong>Base URL de produção:</strong> <code>https://apisophia-632e2671412f.herokuapp.com</code></p>
+<p>Bem-vindo. Este guia é destinado a desenvolvedores de empresas parceiras que vão consumir a Interviews API para receber, em seus próprios sistemas (ATS, CRM de RH, painéis internos, BI), os dados de entrevistas e vagas de candidatos.</p>
+<p>A API é <strong>somente leitura</strong>: você consulta dados, não envia. As entrevistas e vagas são criadas pelo nosso ecossistema de produtos e ficam disponíveis para consulta logo após o processamento.</p>
+<blockquote>
+<p><strong>Migrando da 2.0.0?</strong> Leia a seção <a href="#o-que-mudou-na-210">O que mudou na 2.1.0</a> antes de qualquer coisa. A ordenação de entrevistas foi corrigida e o campo de data recomendado mudou.</p>
+</blockquote>
+<hr>
+</section>
+<section class="doc-section " data-section="sumário"><h2 id="sumário" tabindex="-1">Sumário</h2>
+<ol>
+<li><a href="#o-que-mudou-na-210">O que mudou na 2.1.0</a></li>
+<li><a href="#antes-de-come%C3%A7ar">Antes de começar</a></li>
+<li><a href="#autentica%C3%A7%C3%A3o">Autenticação</a></li>
+<li><a href="#conven%C3%A7%C3%B5es-gerais">Convenções gerais</a></li>
+<li><a href="#rate-limiting">Rate limiting</a></li>
+<li><a href="#endpoints">Endpoints</a><ul>
+<li><a href="#get--%E2%80%94-informa%C3%A7%C3%B5es-da-api">GET / — Informações da API</a></li>
+<li><a href="#get-health-%E2%80%94-verifica%C3%A7%C3%A3o-de-sa%C3%BAde">GET /health — Verificação de saúde</a></li>
+<li><a href="#get-apiv1interviews-%E2%80%94-listar-entrevistas">GET /api/v1/interviews — Listar entrevistas</a></li>
+<li><a href="#get-apiv1interviewslatest-%E2%80%94-%C3%BAltima-entrevista">GET /api/v1/interviews/latest — Última entrevista</a></li>
+<li><a href="#get-apiv1jobs-%E2%80%94-listar-vagas">GET /api/v1/jobs — Listar vagas</a></li>
+</ul>
+</li>
+<li><a href="#dicion%C3%A1rio-de-dados">Dicionário de dados</a></li>
+<li><a href="#tratamento-de-erros">Tratamento de erros</a></li>
+<li><a href="#exemplos-de-c%C3%B3digo">Exemplos de código</a></li>
+<li><a href="#boas-pr%C3%A1ticas">Boas práticas</a></li>
+<li><a href="#lgpd-e-prote%C3%A7%C3%A3o-de-dados">LGPD e proteção de dados</a></li>
+<li><a href="#versionamento-e-changelog">Versionamento e changelog</a></li>
+<li><a href="#suporte">Suporte</a></li>
+<li><a href="#gloss%C3%A1rio">Glossário</a></li>
+</ol>
+<hr>
+</section>
+<section class="doc-section " data-section="o-que-mudou-na-210"><h2 id="o-que-mudou-na-210" tabindex="-1" data-number="01">O que mudou na 2.1.0</h2>
+<p>Três pontos afetam diretamente quem já está integrado:</p>
+<p><strong>1. A ordenação de entrevistas foi corrigida.</strong>
+Até a 2.0.0, <code>/interviews</code> e <code>/interviews/latest</code> ordenavam pelo campo <code>interview.date</code>, que é uma string no formato <code>&quot;M/D/YYYY, h:mm:ss AM/PM&quot;</code>. A ordenação era <strong>textual</strong>, não cronológica — <code>&quot;9/9/2025&quot;</code> vinha antes de <code>&quot;9/3/2026&quot;</code>, e <code>&quot;11:51 AM&quot;</code> vinha depois de <code>&quot;11:40 PM&quot;</code>. O efeito prático era <code>/interviews/latest</code> devolvendo uma entrevista antiga como &quot;última&quot; e a paginação de <code>/interviews</code> fora de ordem. A partir da 2.1.0 a ordenação usa <code>created_at</code> (timestamp real). <strong>Se o seu polling do <code>/latest</code> parecia &quot;travado&quot; numa mesma entrevista, era isso.</strong></p>
+<p><strong>2. Novo campo <code>interview.created_at</code>.</strong>
+ISO 8601 com timezone (ex: <code>&quot;2026-09-03T21:14:21.959Z&quot;</code>). Use este campo para qualquer lógica de data: ordenação, sincronização incremental, exibição. É o campo pelo qual a API ordena.</p>
+<p><strong>3. <code>interview.date</code> está em UTC, não em horário de Brasília.</strong>
+A documentação anterior afirmava que o campo estava em <code>America/Sao_Paulo</code>. Estava errado: o valor é o horário <strong>UTC</strong> formatado em en-US. Se você fazia parsing de <code>interview.date</code> como horário de Brasília, suas datas estão 3 horas adiantadas. Corrija usando <code>interview.created_at</code>. O campo <code>date</code> é mantido apenas para compatibilidade e pode ser removido numa futura major.</p>
+<p>Nenhuma mudança é breaking no contrato: nada foi removido ou renomeado.</p>
+<hr>
+</section>
+<section class="doc-section " data-section="antes-de-começar"><h2 id="antes-de-começar" tabindex="-1" data-number="02">Antes de começar</h2>
+<h3 id="o-que-você-vai-precisar" tabindex="-1">O que você vai precisar</h3>
+<ul>
+<li>Uma <strong>API key</strong>, fornecida pelo nosso time. O formato é <code>sk_</code> seguido de 32 caracteres hexadecimais (ex: <code>sk_a1b2c3d4e5f67890abcdef1234567890</code>). Chaves fora desse formato são rejeitadas antes mesmo de consultar o banco.</li>
+<li>A <strong>URL base</strong> da API: <code>https://apisophia-632e2671412f.herokuapp.com</code></li>
+<li>Um cliente HTTP capaz de fazer requisições GET com header <code>Authorization</code>. Qualquer linguagem moderna serve.</li>
+</ul>
+<h3 id="o-que-você-vai-receber" tabindex="-1">O que você vai receber</h3>
+<p>A API expõe três famílias de dados:</p>
+<ul>
+<li><strong>Vagas</strong> (<code>/api/v1/jobs</code>) — descrições das posições abertas no seu cadastro, com requisitos, responsabilidades e configurações de processo.</li>
+<li><strong>Entrevistas</strong> (<code>/api/v1/interviews</code>) — relatórios consolidados de candidatos avaliados, incluindo dados de contato, endereço, score, pontos fortes/fracos e avaliação por IA.</li>
+<li><strong>Última entrevista</strong> (<code>/api/v1/interviews/latest</code>) — atalho para obter rapidamente o último relatório recebido, útil para integração em tempo quase-real via polling leve.</li>
+</ul>
+<h3 id="isolamento-de-dados" tabindex="-1">Isolamento de dados</h3>
+<p>Sua API key está vinculada a um <code>codigo_cliente</code> exclusivo. Você só enxerga vagas e entrevistas associadas à sua empresa — em nenhuma circunstância dados de outros clientes serão retornados.</p>
+<h3 id="identificadores-id-da-entrevista-vs-codigo-da-vaga" tabindex="-1">Identificadores: <code>id</code> da entrevista vs <code>codigo</code> da vaga</h3>
+<p>Uma confusão comum que vale esclarecer logo:</p>
+<ul>
+<li><strong><code>id</code></strong> (UUID, ex: <code>&quot;4802144f-d42c-479b-bc54-9f02c1417da1&quot;</code>) identifica <strong>uma entrevista</strong>. É único, imutável e é a chave que você deve usar para correlacionar, deduplicar e reportar problemas.</li>
+<li><strong><code>job.codigo</code></strong> (ex: <code>&quot;RHIN-1875&quot;</code>) identifica <strong>uma vaga</strong>. Uma vaga tem várias entrevistas — vários candidatos, e às vezes o mesmo candidato mais de uma vez. <strong>Nunca use <code>codigo</code> como identificador de entrevista.</strong></li>
+</ul>
+<hr>
+</section>
+<section class="doc-section " data-section="autenticação"><h2 id="autenticação" tabindex="-1" data-number="03">Autenticação</h2>
+<p>Todas as rotas sob <code>/api/v1/*</code> exigem autenticação. Envie sua API key no header <code>Authorization</code>, no esquema Bearer:</p>
+<div class="code-block" data-language="http"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-http">GET /api/v1/interviews HTTP/1.1
+Host: apisophia-632e2671412f.herokuapp.com
+Authorization: Bearer sk_a1b2c3d4e5f67890abcdef1234567890
+</code></pre>
+</div>
+<h3 id="cuidados-com-a-chave" tabindex="-1">Cuidados com a chave</h3>
+<ul>
+<li><strong>Nunca exponha a API key em código frontend</strong> (browser, app mobile, GitHub público). A chave concede acesso a todos os dados de candidatos da sua empresa.</li>
+<li>Armazene em variável de ambiente ou em um secret manager (AWS Secrets Manager, Vault, etc.).</li>
+<li>Em caso de suspeita de vazamento, entre em contato imediatamente para rotação. A chave anterior será invalidada na hora.</li>
+<li>Não compartilhe a mesma chave entre ambientes (dev/staging/prod) se possível — solicite chaves separadas.</li>
+</ul>
+<h3 id="o-que-pode-dar-errado" tabindex="-1">O que pode dar errado</h3>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Status</th>
+<th scope="col">Causa</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>401 Unauthorized</code></td>
+<td>Header <code>Authorization</code> ausente ou não começa com <code>Bearer </code></td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code></td>
+<td>Chave com formato inválido (não é <code>sk_</code> + 32 hex), inexistente ou revogada</td>
+</tr>
+</tbody></table>
+</div>
+<p>Exemplo de erro <code>401</code>:</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{ &quot;error&quot;: &quot;Não autorizado: Token de autenticação não fornecido.&quot; }
+</code></pre>
+</div>
+<p>Exemplo de erro <code>403</code>:</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{ &quot;error&quot;: &quot;Proibido: Chave de API inválida.&quot; }
+</code></pre>
+</div>
+<blockquote>
+<p><strong>Dica:</strong> um <code>403</code> inesperado com a chave &quot;certa&quot; quase sempre é um caractere a mais copiado junto — espaço, quebra de linha, aspas. Confira o comprimento: são exatamente 35 caracteres (<code>sk_</code> + 32).</p>
+</blockquote>
+<hr>
+</section>
+<section class="doc-section " data-section="convenções-gerais"><h2 id="convenções-gerais" tabindex="-1" data-number="04">Convenções gerais</h2>
+<h3 id="base-url" tabindex="-1">Base URL</h3>
+<div class="code-block" data-language="texto"><pre tabindex="0" aria-label="Exemplo de código"><code>https://apisophia-632e2671412f.herokuapp.com
+</code></pre>
+</div>
+<p>Todos os exemplos deste guia usam essa URL.</p>
+<h3 id="formato" tabindex="-1">Formato</h3>
+<ul>
+<li><strong>Request:</strong> método GET, sem body. Parâmetros vão em query string.</li>
+<li><strong>Response:</strong> sempre JSON (<code>Content-Type: application/json</code>) em UTF-8.</li>
+<li><strong>Charset:</strong> UTF-8 em tudo (atenção a campos com acentos como <code>logradouro</code>, <code>cidade</code>).</li>
+</ul>
+<h3 id="datas-e-fuso-horário" tabindex="-1">Datas e fuso horário</h3>
+<p>Cada entrevista traz dois campos temporais:</p>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Campo</th>
+<th scope="col">Formato</th>
+<th scope="col">Fuso</th>
+<th scope="col">Uso recomendado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>interview.created_at</code></td>
+<td>ISO 8601, ex: <code>&quot;2026-09-03T21:14:21.959Z&quot;</code></td>
+<td>UTC (com <code>Z</code> explícito)</td>
+<td><strong>Use este.</strong> Ordenação, sync incremental, exibição (converta para o fuso do usuário).</td>
+</tr>
+<tr>
+<td><code>interview.date</code></td>
+<td>string en-US, ex: <code>&quot;9/3/2026, 9:14:21 PM&quot;</code></td>
+<td><strong>UTC</strong> (sem indicador)</td>
+<td>Legado. Só exibição, se tanto. Não ordene por ele.</td>
+</tr>
+</tbody></table>
+</div>
+<p>Os dois representam o <strong>mesmo instante</strong>. <code>created_at</code> é simplesmente a versão parseável e sem ambiguidade.</p>
+<h3 id="envelope-de-resposta" tabindex="-1">Envelope de resposta</h3>
+<p>Todas as respostas bem-sucedidas seguem o padrão:</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{ &quot;data&quot;: ... }
+</code></pre>
+</div>
+<p>ou, para endpoints paginados:</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{ &quot;data&quot;: [...], &quot;pagination&quot;: { ... } }
+</code></pre>
+</div>
+<p>Todas as respostas de erro seguem:</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{ &quot;error&quot;: &quot;Mensagem descritiva em português.&quot; }
+</code></pre>
+</div>
+<hr>
+</section>
+<section class="doc-section " data-section="rate-limiting"><h2 id="rate-limiting" tabindex="-1" data-number="05">Rate limiting</h2>
+<p>A API aplica dois limites para proteger a estabilidade do serviço:</p>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Escopo</th>
+<th scope="col">Limite padrão</th>
+<th scope="col">Janela</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Por IP de origem</td>
+<td>300 requisições</td>
+<td>15 minutos</td>
+</tr>
+<tr>
+<td>Por API key autenticada</td>
+<td>120 requisições</td>
+<td>1 minuto</td>
+</tr>
+</tbody></table>
+</div>
+<p>Cada resposta inclui headers padrão de rate limit (RFC draft 7):</p>
+<div class="code-block" data-language="texto"><pre tabindex="0" aria-label="Exemplo de código"><code>RateLimit-Limit: 120
+RateLimit-Remaining: 118
+RateLimit-Reset: 47
+</code></pre>
+</div>
+<p><code>RateLimit-Reset</code> indica em quantos segundos a janela atual zera.</p>
+<p>Ao exceder o limite, você recebe:</p>
+<div class="code-block" data-language="http"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-http">HTTP/1.1 429 Too Many Requests
+Retry-After: 47
+
+{ &quot;error&quot;: &quot;Limite de requisições do cliente atingido.&quot; }
+</code></pre>
+</div>
+<h3 id="recomendações" tabindex="-1">Recomendações</h3>
+<ul>
+<li><strong>Implemente backoff exponencial</strong> ao receber <code>429</code>. Comece com 1s e dobre a cada tentativa, com teto de 60s.</li>
+<li><strong>Espace suas chamadas.</strong> Se você só consulta <code>/interviews/latest</code> para detectar novos relatórios, um polling a cada 30–60 segundos é mais que suficiente. Polling agressivo (a cada segundo) só consome seu rate limit sem ganho real.</li>
+<li><strong>Não tente acelerar paginação</strong> fazendo várias páginas em paralelo com a mesma chave — ainda vai bater no limite de 120/min, só que mais rápido.</li>
+</ul>
+<hr>
+</section>
+<section class="doc-section " data-section="endpoints"><h2 id="endpoints" tabindex="-1" data-number="06">Endpoints</h2>
+<h3 id="get--—-informações-da-api" tabindex="-1"><span class="method">GET</span> / — Informações da API</h3>
+<p>Endpoint público (sem autenticação) que retorna informações básicas da API. Útil para verificar que a URL base está correta.</p>
+<p><strong>Request:</strong></p>
+<div class="code-block" data-language="bash"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-bash">curl https://apisophia-632e2671412f.herokuapp.com/
+</code></pre>
+</div>
+<p><strong>Response <code>200</code>:</strong></p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{
+  &quot;message&quot;: &quot;Bem-vindo à API de Integração de Entrevistas!&quot;,
+  &quot;status&quot;: &quot;online&quot;,
+  &quot;version&quot;: &quot;2.1.0&quot;
+}
+</code></pre>
+</div>
+<h3 id="get-health-—-verificação-de-saúde" tabindex="-1"><span class="method">GET</span> /health — Verificação de saúde</h3>
+<p>Endpoint público que verifica a conectividade com o banco de dados. Use em monitoramento de uptime (intervalo de 1 minuto é suficiente).</p>
+<p><strong>Request:</strong></p>
+<div class="code-block" data-language="bash"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-bash">curl https://apisophia-632e2671412f.herokuapp.com/health
+</code></pre>
+</div>
+<p><strong>Response <code>200</code></strong> (saudável):</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{ &quot;status&quot;: &quot;ok&quot;, &quot;database&quot;: &quot;ok&quot;, &quot;auth_mode&quot;: &quot;service_role&quot;, &quot;version&quot;: &quot;2.1.0&quot; }
+</code></pre>
+</div>
+<p><strong>Response <code>503</code></strong> (degradado):</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{ &quot;status&quot;: &quot;degraded&quot;, &quot;database&quot;: &quot;error&quot;, &quot;auth_mode&quot;: &quot;service_role&quot; }
+</code></pre>
+</div>
+<p>O campo <code>auth_mode</code> é informativo e destinado à nossa operação; você pode ignorá-lo.</p>
+<h3 id="get-apiv1interviews-—-listar-entrevistas" tabindex="-1"><span class="method">GET</span> /api/v1/interviews — Listar entrevistas</h3>
+<p>Retorna a lista paginada de relatórios de entrevista do seu cliente, ordenados <strong>da mais recente para a mais antiga por <code>interview.created_at</code></strong>. A ordem é determinística (desempate por <code>id</code>), então a paginação é estável entre requisições.</p>
+<p><strong>Query parameters:</strong></p>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Parâmetro</th>
+<th scope="col">Tipo</th>
+<th scope="col">Default</th>
+<th scope="col">Restrições</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>page</code></td>
+<td>inteiro</td>
+<td>1</td>
+<td>&gt;= 1</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>inteiro</td>
+<td>20</td>
+<td>entre 1 e 100</td>
+</tr>
+</tbody></table>
+</div>
+<p><strong>Request:</strong></p>
+<div class="code-block" data-language="bash"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-bash">curl -H &quot;Authorization: Bearer sk_a1b2c3...&quot; \
+  &quot;https://apisophia-632e2671412f.herokuapp.com/api/v1/interviews?page=1&amp;limit=20&quot;
+</code></pre>
+</div>
+<p><strong>Response <code>200</code>:</strong></p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;8ecb88bf-d1e8-4f43-bf5f-9c4c62461183&quot;,
+      &quot;candidate&quot;: {
+        &quot;name&quot;: &quot;Ramon Clemente&quot;,
+        &quot;email&quot;: &quot;ramon.clemente@example.com&quot;,
+        &quot;phone&quot;: &quot;31994301901&quot;,
+        &quot;cpf&quot;: &quot;06390483660&quot;,
+        &quot;video_url&quot;: null,
+        &quot;address&quot;: {
+          &quot;cep&quot;: &quot;38182670&quot;,
+          &quot;logradouro&quot;: &quot;Avenida Lorena Simeão Vale&quot;,
+          &quot;numero&quot;: &quot;70 C&quot;,
+          &quot;complemento&quot;: null,
+          &quot;bairro&quot;: &quot;Loteamento Residencial Dona Adélia II&quot;,
+          &quot;cidade&quot;: &quot;Araxá&quot;,
+          &quot;estado&quot;: &quot;MG&quot;
+        }
+      },
+      &quot;job&quot;: {
+        &quot;position&quot;: &quot;Diretor de Operações&quot;,
+        &quot;codigo&quot;: &quot;STAR-DIROP&quot;
+      },
+      &quot;interview&quot;: {
+        &quot;created_at&quot;: &quot;2026-05-29T17:12:36.481Z&quot;,
+        &quot;date&quot;: &quot;5/29/2026, 5:12:36 PM&quot;,
+        &quot;overall_score&quot;: null,
+        &quot;core10_link&quot;: null
+      },
+      &quot;results&quot;: {
+        &quot;strengths&quot;: null,
+        &quot;development_points&quot;: null,
+        &quot;ai_summary&quot;: null
+      }
+    }
+  ],
+  &quot;pagination&quot;: {
+    &quot;currentPage&quot;: 1,
+    &quot;pageSize&quot;: 1,
+    &quot;totalPages&quot;: 1,
+    &quot;totalRecords&quot;: 1
+  }
+}
+</code></pre>
+</div>
+<p><strong>Notas:</strong></p>
+<ul>
+<li>O <code>id</code> retornado é o <code>interview_uuid</code> — use-o como chave única para correlacionar com seus próprios registros.</li>
+<li>Campos <code>null</code> são comuns em entrevistas ainda em processamento pela IA. Veja <a href="#status-de-processamento-de-uma-entrevista">Status de processamento</a>.</li>
+<li><code>pageSize</code> indica quantos itens efetivamente vieram nesta página (pode ser menor que <code>limit</code> na última página).</li>
+</ul>
+<p><strong>Possíveis erros:</strong></p>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Status</th>
+<th scope="col">Quando ocorre</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>400</code></td>
+<td><code>page</code> ou <code>limit</code> inválidos (não inteiros, fora do range permitido)</td>
+</tr>
+<tr>
+<td><code>401</code> / <code>403</code></td>
+<td>Problema de autenticação</td>
+</tr>
+<tr>
+<td><code>429</code></td>
+<td>Rate limit excedido</td>
+</tr>
+<tr>
+<td><code>500</code></td>
+<td>Erro interno</td>
+</tr>
+</tbody></table>
+</div>
+<p>Exemplo de erro <code>400</code>:</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{ &quot;error&quot;: &quot;Parâmetro `limit` inválido. Deve ser inteiro entre 1 e 100.&quot; }
+</code></pre>
+</div>
+<h3 id="get-apiv1interviewslatest-—-última-entrevista" tabindex="-1"><span class="method">GET</span> /api/v1/interviews/latest — Última entrevista</h3>
+<p>Atalho para obter apenas a entrevista mais recente <strong>por <code>created_at</code></strong> (mesmo formato de objeto que cada item de <code>/interviews</code>).</p>
+<p><strong>Request:</strong></p>
+<div class="code-block" data-language="bash"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-bash">curl -H &quot;Authorization: Bearer sk_a1b2c3...&quot; \
+  https://apisophia-632e2671412f.herokuapp.com/api/v1/interviews/latest
+</code></pre>
+</div>
+<p><strong>Response <code>200</code>:</strong></p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;8ecb88bf-d1e8-4f43-bf5f-9c4c62461183&quot;,
+    &quot;candidate&quot;: { &quot;...&quot;: &quot;mesmo formato de /interviews&quot; },
+    &quot;job&quot;: { &quot;position&quot;: &quot;Diretor de Operações&quot;, &quot;codigo&quot;: &quot;STAR-DIROP&quot; },
+    &quot;interview&quot;: {
+      &quot;created_at&quot;: &quot;2026-05-29T17:12:36.481Z&quot;,
+      &quot;date&quot;: &quot;5/29/2026, 5:12:36 PM&quot;,
+      &quot;overall_score&quot;: null,
+      &quot;core10_link&quot;: null
+    },
+    &quot;results&quot;: { &quot;strengths&quot;: null, &quot;development_points&quot;: null, &quot;ai_summary&quot;: null }
+  }
+}
+</code></pre>
+</div>
+<p><strong>Response <code>404</code></strong> (nenhuma entrevista cadastrada):</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{ &quot;error&quot;: &quot;Nenhuma entrevista encontrada.&quot; }
+</code></pre>
+</div>
+<p><strong>Quando usar este endpoint vs <code>/interviews</code>:</strong></p>
+<ul>
+<li>Use <code>/interviews/latest</code> se você só precisa detectar a entrada da entrevista mais recente (polling leve) <strong>e</strong> o volume de entrevistas é baixo o bastante para que duas nunca cheguem entre dois polls.</li>
+<li>Use <code>/interviews</code> se você precisa de histórico, sincronização incremental ou processamento em lote. <strong>Se duas entrevistas puderem entrar dentro do seu intervalo de polling, <code>/latest</code> vai perder a primeira</strong> — nesse caso, use <code>/interviews?limit=10</code> e compare pelo <code>created_at</code>. Veja <a href="#sincroniza%C3%A7%C3%A3o-incremental-vs-completa">Sincronização incremental</a>.</li>
+</ul>
+<h3 id="get-apiv1jobs-—-listar-vagas" tabindex="-1"><span class="method">GET</span> /api/v1/jobs — Listar vagas</h3>
+<p>Retorna todas as vagas cadastradas pelo seu cliente, ordenadas por <code>id</code> decrescente (mais recente primeiro).</p>
+<p>Não há paginação neste endpoint — o volume de vagas por cliente costuma ser pequeno (dezenas a poucas centenas).</p>
+<p><strong>Request:</strong></p>
+<div class="code-block" data-language="bash"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-bash">curl -H &quot;Authorization: Bearer sk_a1b2c3...&quot; \
+  https://apisophia-632e2671412f.herokuapp.com/api/v1/jobs
+</code></pre>
+</div>
+<p><strong>Response <code>200</code>:</strong></p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-json">{
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: 1705,
+      &quot;title&quot;: &quot;Área de Produção&quot;,
+      &quot;company&quot;: &quot;Tramontina Multi&quot;,
+      &quot;work_model&quot;: &quot;Presencial&quot;,
+      &quot;status&quot;: &quot;active&quot;,
+      &quot;description&quot;: &quot;Profissional responsável por atuar na produção industrial...&quot;,
+      &quot;responsibilities&quot;: [
+        &quot;Montar peças, componentes e jogos utilizando dispositivos, ferramentas manuais ou automáticas&quot;,
+        &quot;Embalar as peças e acondicioná-las nas respectivas embalagens&quot;,
+        &quot;Operar máquinas do processo produtivo&quot;
+      ],
+      &quot;requirements&quot;: [
+        &quot;No mínimo Ensino fundamental incompleto&quot;,
+        &quot;Atenção aos detalhes&quot;
+      ],
+      &quot;nice_to_have&quot;: [],
+      &quot;codigo&quot;: &quot;TRAM-PROD01&quot;,
+      &quot;testecomportamental&quot;: true,
+      &quot;anexar_curriculo_obrigatorio&quot;: false,
+      &quot;divulgar&quot;: false,
+      &quot;perguntavideo&quot;: null,
+      &quot;video&quot;: false,
+      &quot;log_cargos&quot;: &quot;recrutador@empresa.com&quot;
+    }
+  ]
+}
+</code></pre>
+</div>
+<hr>
+</section>
+<section class="doc-section " data-section="dicionário-de-dados"><h2 id="dicionário-de-dados" tabindex="-1" data-number="07">Dicionário de dados</h2>
+<h3 id="status-de-processamento-de-uma-entrevista" tabindex="-1">Status de processamento de uma entrevista</h3>
+<p>Uma entrevista passa por etapas. Os campos abaixo refletem o estágio:</p>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Estágio</th>
+<th scope="col"><code>interview.overall_score</code></th>
+<th scope="col"><code>results.strengths</code>, <code>development_points</code>, <code>ai_summary</code></th>
+<th scope="col"><code>interview.core10_link</code></th>
+<th scope="col"><code>candidate.video_url</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Em coleta</td>
+<td><code>null</code></td>
+<td><code>null</code></td>
+<td><code>null</code></td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td>Coletada, IA processando</td>
+<td><code>null</code> ou parcial</td>
+<td><code>null</code></td>
+<td>pode estar disponível</td>
+<td>pode estar disponível</td>
+</tr>
+<tr>
+<td>Concluída</td>
+<td>preenchido</td>
+<td>preenchido</td>
+<td>preenchido</td>
+<td>preenchido</td>
+</tr>
+</tbody></table>
+</div>
+<p><strong>Trate <code>null</code> graciosamente</strong> em todos esses campos. Se você precisa esperar a IA terminar, faça polling pelo <code>id</code> da entrevista até <code>overall_score</code> deixar de ser <code>null</code>.</p>
+<h3 id="campos-de-candidate" tabindex="-1">Campos de <code>candidate</code></h3>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Campo</th>
+<th scope="col">Tipo</th>
+<th scope="col">Formato</th>
+<th scope="col">Exemplo</th>
+<th scope="col">Observações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>string | null</td>
+<td>nome completo</td>
+<td><code>&quot;João Silva&quot;</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>string | null</td>
+<td>RFC 5322</td>
+<td><code>&quot;joao@example.com&quot;</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>string | null</td>
+<td>dígitos + DDD, sem máscara</td>
+<td><code>&quot;11987654321&quot;</code></td>
+<td>10 ou 11 dígitos. Aplique máscara no seu sistema se for exibir.</td>
+</tr>
+<tr>
+<td><code>cpf</code></td>
+<td>string | null</td>
+<td>11 dígitos, sem máscara</td>
+<td><code>&quot;12345678901&quot;</code></td>
+<td>Dígitos verificadores incluídos. Dado sensível — veja <a href="#lgpd-e-prote%C3%A7%C3%A3o-de-dados">LGPD</a>.</td>
+</tr>
+<tr>
+<td><code>video_url</code></td>
+<td>string | null</td>
+<td>URL HTTPS</td>
+<td><code>&quot;https://.../video.mp4&quot;</code></td>
+<td>URL pública para o vídeo da entrevista. <code>null</code> se não gerado.</td>
+</tr>
+</tbody></table>
+</div>
+<h3 id="campos-de-candidateaddress" tabindex="-1">Campos de <code>candidate.address</code></h3>
+<p>Endereço residencial do candidato, capturado durante a entrevista.</p>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Campo</th>
+<th scope="col">Tipo</th>
+<th scope="col">Formato</th>
+<th scope="col">Exemplo</th>
+<th scope="col">Observações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cep</code></td>
+<td>string | null</td>
+<td>8 dígitos, sem máscara</td>
+<td><code>&quot;01310100&quot;</code></td>
+<td>Aplique máscara <code>00000-000</code> no seu sistema se for exibir.</td>
+</tr>
+<tr>
+<td><code>logradouro</code></td>
+<td>string | null</td>
+<td>livre</td>
+<td><code>&quot;Avenida Paulista&quot;</code></td>
+<td>Geralmente preenchido via lookup de CEP.</td>
+</tr>
+<tr>
+<td><code>numero</code></td>
+<td>string | null</td>
+<td>livre</td>
+<td><code>&quot;1578&quot;</code></td>
+<td>Tipo string, não número — aceita <code>&quot;S/N&quot;</code>, <code>&quot;100 A&quot;</code>, <code>&quot;70 C&quot;</code>.</td>
+</tr>
+<tr>
+<td><code>complemento</code></td>
+<td>string | null</td>
+<td>livre</td>
+<td><code>&quot;Apto 42&quot;</code>, <code>null</code></td>
+<td>Frequentemente <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>bairro</code></td>
+<td>string | null</td>
+<td>livre</td>
+<td><code>&quot;Bela Vista&quot;</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>cidade</code></td>
+<td>string | null</td>
+<td>livre</td>
+<td><code>&quot;São Paulo&quot;</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>estado</code></td>
+<td>string | null</td>
+<td>sigla UF de 2 letras</td>
+<td><code>&quot;SP&quot;</code></td>
+<td>Maiúsculas.</td>
+</tr>
+</tbody></table>
+</div>
+<h3 id="campos-de-job-dentro-da-entrevista" tabindex="-1">Campos de <code>job</code> (dentro da entrevista)</h3>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Campo</th>
+<th scope="col">Tipo</th>
+<th scope="col">Exemplo</th>
+<th scope="col">Observações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>position</code></td>
+<td>string | null</td>
+<td><code>&quot;Diretor de Operações&quot;</code></td>
+<td>Título da vaga no momento da entrevista.</td>
+</tr>
+<tr>
+<td><code>codigo</code></td>
+<td>string | null</td>
+<td><code>&quot;STAR-DIROP&quot;</code></td>
+<td>Código interno da <strong>vaga</strong>. Use este campo para juntar (<code>JOIN</code>) com o <code>codigo</code> de <code>/api/v1/jobs</code>. <strong>Não é identificador de entrevista</strong> — uma vaga tem N entrevistas.</td>
+</tr>
+</tbody></table>
+</div>
+<h3 id="campos-de-interview" tabindex="-1">Campos de <code>interview</code></h3>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Campo</th>
+<th scope="col">Tipo</th>
+<th scope="col">Formato</th>
+<th scope="col">Exemplo</th>
+<th scope="col">Observações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>created_at</code></td>
+<td>string</td>
+<td>ISO 8601 com timezone (UTC)</td>
+<td><code>&quot;2026-09-03T21:14:21.959Z&quot;</code></td>
+<td><strong>Campo de data recomendado.</strong> Instante em que a entrevista foi registrada. É o campo pelo qual a API ordena.</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>string | null</td>
+<td>locale en-US, <code>&quot;M/D/YYYY, h:mm:ss AM/PM&quot;</code></td>
+<td><code>&quot;9/3/2026, 9:14:21 PM&quot;</code></td>
+<td><strong>Legado.</strong> Mesmo instante de <code>created_at</code>, formatado em <strong>UTC</strong>. Ver nota abaixo.</td>
+</tr>
+<tr>
+<td><code>overall_score</code></td>
+<td>número | null</td>
+<td>decimal</td>
+<td><code>7.5</code>, <code>null</code></td>
+<td>Score consolidado de 0 a 10. <code>null</code> até a IA terminar.</td>
+</tr>
+<tr>
+<td><code>core10_link</code></td>
+<td>string | null</td>
+<td>URL HTTPS</td>
+<td><code>&quot;https://.../core10/...&quot;</code></td>
+<td>Link para o relatório detalhado do teste comportamental Core10.</td>
+</tr>
+</tbody></table>
+</div>
+<h4 id="-sobre-interviewdate" tabindex="-1">⚠ Sobre <code>interview.date</code></h4>
+<p>Este campo é uma string sem indicador de fuso, gerada em <strong>UTC</strong>. Ele foi documentado até a 2.0.0 como horário de Brasília — <strong>isso estava errado</strong>. Se você fez parsing dele assumindo <code>America/Sao_Paulo</code>, suas datas estão 3 horas adiantadas.</p>
+<p>A recomendação é <strong>não usar <code>date</code></strong> e trabalhar com <code>created_at</code>:</p>
+<p><strong>JavaScript:</strong></p>
+<div class="code-block" data-language="javascript"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-javascript">const when = new Date(interview.created_at); // instante correto, sem ambiguidade
+// Exibir em horário de Brasília:
+when.toLocaleString(&#39;pt-BR&#39;, { timeZone: &#39;America/Sao_Paulo&#39; });
+</code></pre>
+</div>
+<p><strong>Python:</strong></p>
+<div class="code-block" data-language="python"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-python">from datetime import datetime
+from zoneinfo import ZoneInfo
+
+when = datetime.fromisoformat(interview[&quot;created_at&quot;].replace(&quot;Z&quot;, &quot;+00:00&quot;))
+when_brt = when.astimezone(ZoneInfo(&quot;America/Sao_Paulo&quot;))
+</code></pre>
+</div>
+<p>Se por algum motivo precisar parsear <code>date</code>, trate-o como UTC explicitamente:</p>
+<div class="code-block" data-language="javascript"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-javascript">import { parse } from &#39;date-fns&#39;;
+import { fromZonedTime } from &#39;date-fns-tz&#39;;
+const local = parse(&quot;9/3/2026, 9:14:21 PM&quot;, &quot;M/d/yyyy, h:mm:ss a&quot;, new Date());
+const utc = fromZonedTime(local, &#39;UTC&#39;);
+</code></pre>
+</div>
+<p><strong>Nunca ordene comparando as strings de <code>date</code></strong> — <code>&quot;10/01/2026&quot;</code> vem antes de <code>&quot;5/29/2026&quot;</code> em ordenação textual. Confie na ordem que a API já entrega ou ordene por <code>created_at</code>.</p>
+<h3 id="campos-de-results" tabindex="-1">Campos de <code>results</code></h3>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Campo</th>
+<th scope="col">Tipo</th>
+<th scope="col">Conteúdo</th>
+<th scope="col">Observações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>strengths</code></td>
+<td>string | null</td>
+<td>texto livre</td>
+<td>Pontos fortes identificados pela IA. Pode conter quebras de linha e formatação leve.</td>
+</tr>
+<tr>
+<td><code>development_points</code></td>
+<td>string | null</td>
+<td>texto livre</td>
+<td>Pontos a desenvolver / áreas de atenção.</td>
+</tr>
+<tr>
+<td><code>ai_summary</code></td>
+<td>string | null</td>
+<td>texto livre</td>
+<td>Avaliação geral consolidada pela IA.</td>
+</tr>
+</tbody></table>
+</div>
+<blockquote>
+<p>⚠ <strong>Decisões automatizadas (LGPD Art. 20):</strong> os campos <code>overall_score</code>, <code>strengths</code>, <code>development_points</code> e <code>ai_summary</code> são gerados por IA. Sob a LGPD, o candidato tem direito a solicitar revisão por pessoa natural. Veja <a href="#lgpd-e-prote%C3%A7%C3%A3o-de-dados">LGPD</a>.</p>
+</blockquote>
+<h3 id="campos-de-vagas-apiv1jobs" tabindex="-1">Campos de vagas (<code>/api/v1/jobs</code>)</h3>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Campo</th>
+<th scope="col">Tipo</th>
+<th scope="col">Exemplo</th>
+<th scope="col">Observações</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>inteiro</td>
+<td><code>1705</code></td>
+<td>ID interno da vaga. Único por vaga.</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>string</td>
+<td><code>&quot;Diretor de Operações&quot;</code></td>
+<td>Título exibível.</td>
+</tr>
+<tr>
+<td><code>company</code></td>
+<td>string | null</td>
+<td><code>&quot;Tramontina Multi&quot;</code></td>
+<td>Pode ser diferente do nome do cliente em casos de holding.</td>
+</tr>
+<tr>
+<td><code>work_model</code></td>
+<td>string | null</td>
+<td><code>&quot;Presencial&quot;</code>, <code>&quot;Remoto&quot;</code>, <code>&quot;Híbrido&quot;</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>string | null</td>
+<td><code>&quot;active&quot;</code></td>
+<td>Outros valores possíveis incluem variantes de inativo/encerrado conforme cadastro do cliente.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string | null</td>
+<td>texto livre, pode conter <code>\n</code></td>
+<td>Descrição da vaga.</td>
+</tr>
+<tr>
+<td><code>responsibilities</code></td>
+<td>array de strings</td>
+<td><code>[&quot;Responsabilidade 1&quot;, ...]</code></td>
+<td>Pode vir vazio (<code>[]</code>).</td>
+</tr>
+<tr>
+<td><code>requirements</code></td>
+<td>array de strings</td>
+<td><code>[&quot;Requisito 1&quot;, ...]</code></td>
+<td>Requisitos obrigatórios.</td>
+</tr>
+<tr>
+<td><code>nice_to_have</code></td>
+<td>array de strings</td>
+<td><code>[&quot;Diferencial 1&quot;, ...]</code></td>
+<td>Diferenciais. Frequentemente vazio.</td>
+</tr>
+<tr>
+<td><code>codigo</code></td>
+<td>string | null</td>
+<td><code>&quot;STAR-DIROP&quot;</code></td>
+<td>Use para juntar com <code>job.codigo</code> das entrevistas.</td>
+</tr>
+<tr>
+<td><code>testecomportamental</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Indica se a vaga aplica o teste Core10.</td>
+</tr>
+<tr>
+<td><code>anexar_curriculo_obrigatorio</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Indica se o anexo de currículo é obrigatório no fluxo de aplicação.</td>
+</tr>
+<tr>
+<td><code>divulgar</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Indica se a vaga deve ser divulgada publicamente.</td>
+</tr>
+<tr>
+<td><code>perguntavideo</code></td>
+<td>string | null</td>
+<td>texto livre</td>
+<td>Pergunta enviada em formato vídeo durante a entrevista (quando aplicável).</td>
+</tr>
+<tr>
+<td><code>video</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Indica se a vaga inclui resposta em vídeo do candidato.</td>
+</tr>
+<tr>
+<td><code>log_cargos</code></td>
+<td>string | null</td>
+<td>email</td>
+<td>Email do recrutador responsável pela vaga.</td>
+</tr>
+</tbody></table>
+</div>
+<hr>
+</section>
+<section class="doc-section " data-section="tratamento-de-erros"><h2 id="tratamento-de-erros" tabindex="-1" data-number="08">Tratamento de erros</h2>
+<p>Todos os erros retornam status HTTP apropriado e payload JSON <code>{ &quot;error&quot;: &quot;...&quot; }</code>.</p>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Status</th>
+<th scope="col">Significado</th>
+<th scope="col">Ação recomendada</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>200</code></td>
+<td>Sucesso</td>
+<td>Processe <code>data</code>.</td>
+</tr>
+<tr>
+<td><code>400</code></td>
+<td>Parâmetro inválido</td>
+<td>Corrija o request. Mensagem indica qual parâmetro está errado.</td>
+</tr>
+<tr>
+<td><code>401</code></td>
+<td>Autenticação ausente</td>
+<td>Adicione o header <code>Authorization: Bearer ...</code>.</td>
+</tr>
+<tr>
+<td><code>403</code></td>
+<td>Chave inválida, malformada ou revogada</td>
+<td>Verifique a chave (35 caracteres, <code>sk_</code> + 32 hex). Se estiver correta, contate suporte.</td>
+</tr>
+<tr>
+<td><code>404</code></td>
+<td>Recurso não encontrado</td>
+<td>Em <code>/interviews/latest</code>: ainda não há entrevistas. Em outros: rota inexistente.</td>
+</tr>
+<tr>
+<td><code>413</code></td>
+<td>Payload muito grande</td>
+<td>Não deveria ocorrer em GETs. Verifique se não está enviando body.</td>
+</tr>
+<tr>
+<td><code>429</code></td>
+<td>Rate limit excedido</td>
+<td>Aplique backoff exponencial. Veja header <code>Retry-After</code>.</td>
+</tr>
+<tr>
+<td><code>500</code></td>
+<td>Erro interno do servidor</td>
+<td>Retentar com backoff. Se persistir, contate suporte.</td>
+</tr>
+<tr>
+<td><code>502</code> / <code>503</code> / <code>504</code></td>
+<td>Indisponibilidade da plataforma de hospedagem, ou (em <code>/health</code>) banco indisponível</td>
+<td>Retentar com backoff. Indica problema temporário de infraestrutura.</td>
+</tr>
+</tbody></table>
+</div>
+<h3 id="estratégia-de-retry" tabindex="-1">Estratégia de retry</h3>
+<p>Retente automaticamente apenas em <code>429</code>, <code>500</code>, <code>502</code>, <code>503</code>, <code>504</code>. <strong>Nunca retente em <code>400</code>, <code>401</code>, <code>403</code>, <code>404</code></strong> — esses indicam problema no seu request que não vai se resolver com retry.</p>
+<div class="code-block" data-language="texto"><pre tabindex="0" aria-label="Exemplo de código"><code>tentativa 1: imediata
+tentativa 2: após 1s
+tentativa 3: após 2s
+tentativa 4: após 4s
+tentativa 5: após 8s (desistir após esta)
+</code></pre>
+</div>
+<p>Para <code>429</code>, respeite o header <code>Retry-After</code> se presente.</p>
+<hr>
+</section>
+<section class="doc-section " data-section="exemplos-de-código"><h2 id="exemplos-de-código" tabindex="-1" data-number="09">Exemplos de código</h2>
+<h3 id="curl" tabindex="-1">cURL</h3>
+<div class="code-block" data-language="bash"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-bash"># Listar primeira página de entrevistas
+curl -H &quot;Authorization: Bearer sk_a1b2c3d4e5f67890abcdef1234567890&quot; \
+  &quot;https://apisophia-632e2671412f.herokuapp.com/api/v1/interviews?page=1&amp;limit=50&quot;
+
+# Obter última entrevista
+curl -H &quot;Authorization: Bearer sk_a1b2c3d4e5f67890abcdef1234567890&quot; \
+  &quot;https://apisophia-632e2671412f.herokuapp.com/api/v1/interviews/latest&quot;
+
+# Listar todas as vagas
+curl -H &quot;Authorization: Bearer sk_a1b2c3d4e5f67890abcdef1234567890&quot; \
+  &quot;https://apisophia-632e2671412f.herokuapp.com/api/v1/jobs&quot;
+</code></pre>
+</div>
+<h3 id="nodejs-fetch-nativo-node-18" tabindex="-1">Node.js (fetch nativo, Node 18+)</h3>
+<div class="code-block" data-language="javascript"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-javascript">const API_BASE = &#39;https://apisophia-632e2671412f.herokuapp.com&#39;;
+const API_KEY = process.env.INTERVIEWS_API_KEY;
+
+async function fetchInterviews(page = 1, limit = 20) {
+  const res = await fetch(
+    `${API_BASE}/api/v1/interviews?page=${page}&amp;limit=${limit}`,
+    { headers: { Authorization: `Bearer ${API_KEY}` } }
+  );
+  if (!res.ok) {
+    const err = await res.json().catch(() =&gt; ({}));
+    throw new Error(`HTTP ${res.status}: ${err.error || &#39;erro desconhecido&#39;}`);
+  }
+  return res.json();
+}
+
+// Uso
+const { data, pagination } = await fetchInterviews(1, 50);
+console.log(`Página ${pagination.currentPage}/${pagination.totalPages}`);
+data.forEach((interview) =&gt; {
+  const when = new Date(interview.interview.created_at);
+  console.log(
+    `${when.toISOString()} — ${interview.candidate.name} — ${interview.job.position}`
+  );
+});
+</code></pre>
+</div>
+<h3 id="nodejs-—-sincronização-completa-com-paginação" tabindex="-1">Node.js — sincronização completa com paginação</h3>
+<div class="code-block" data-language="javascript"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-javascript">async function syncAllInterviews() {
+  const results = [];
+  let page = 1;
+  const limit = 100; // máximo permitido
+
+  while (true) {
+    const { data, pagination } = await fetchInterviews(page, limit);
+    results.push(...data);
+    if (page &gt;= pagination.totalPages) break;
+    page++;
+    // Respeitar rate limit: 120/min = ~500ms entre requests
+    await new Promise((r) =&gt; setTimeout(r, 600));
+  }
+  return results;
+}
+</code></pre>
+</div>
+<h3 id="nodejs-—-polling-para-detectar-novas-entrevistas-recomendado" tabindex="-1">Node.js — polling para detectar novas entrevistas (recomendado)</h3>
+<p>Esta versão usa <code>/interviews?limit=10</code> em vez de <code>/latest</code>, e compara por <code>created_at</code>. Assim ela <strong>não perde</strong> entrevistas quando duas chegam entre dois polls.</p>
+<div class="code-block" data-language="javascript"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-javascript">let lastSeenCreatedAt = null; // persista isso no seu banco entre reinícios
+
+async function pollNewInterviews() {
+  try {
+    const { data } = await fetchInterviews(1, 10);
+    // data já vem da mais recente para a mais antiga
+    const novas = lastSeenCreatedAt
+      ? data.filter((i) =&gt; i.interview.created_at &gt; lastSeenCreatedAt)
+      : data.slice(0, 1);
+
+    // processar da mais antiga para a mais recente
+    for (const interview of novas.reverse()) {
+      console.log(&#39;Nova entrevista:&#39;, interview.id, interview.job.codigo);
+      // ... processar
+      lastSeenCreatedAt = interview.interview.created_at;
+    }
+  } catch (err) {
+    console.error(&#39;Erro no polling:&#39;, err.message);
+  }
+}
+
+// Polling a cada 60 segundos
+setInterval(pollNewInterviews, 60_000);
+pollNewInterviews();
+</code></pre>
+</div>
+<blockquote>
+<p>Comparar strings ISO 8601 em UTC com <code>&gt;</code> funciona porque o formato é lexicograficamente ordenável. Se <code>novas.length === 10</code>, chegaram mais de 10 desde o último poll — puxe a página 2 ou aumente o <code>limit</code>.</p>
+</blockquote>
+<h3 id="nodejs-—-polling-simples-com-latest" tabindex="-1">Node.js — polling simples com <code>/latest</code></h3>
+<p>Adequado apenas quando o volume é baixo (uma entrevista a cada vários minutos, no máximo).</p>
+<div class="code-block" data-language="javascript"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-javascript">let lastSeenId = null;
+
+async function pollLatest() {
+  try {
+    const res = await fetch(`${API_BASE}/api/v1/interviews/latest`, {
+      headers: { Authorization: `Bearer ${API_KEY}` },
+    });
+    if (res.status === 404) return; // nenhuma entrevista ainda
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const { data } = await res.json();
+    if (data.id !== lastSeenId) {
+      lastSeenId = data.id;
+      console.log(&#39;Nova entrevista detectada:&#39;, data.id);
+      // ... processar
+    }
+  } catch (err) {
+    console.error(&#39;Erro no polling:&#39;, err.message);
+  }
+}
+
+setInterval(pollLatest, 60_000);
+pollLatest();
+</code></pre>
+</div>
+<h3 id="python-requests" tabindex="-1">Python (requests)</h3>
+<div class="code-block" data-language="python"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-python">import os
+import requests
+
+API_BASE = &quot;https://apisophia-632e2671412f.herokuapp.com&quot;
+API_KEY = os.environ[&quot;INTERVIEWS_API_KEY&quot;]
+HEADERS = {&quot;Authorization&quot;: f&quot;Bearer {API_KEY}&quot;}
+
+
+def fetch_interviews(page=1, limit=20):
+    r = requests.get(
+        f&quot;{API_BASE}/api/v1/interviews&quot;,
+        params={&quot;page&quot;: page, &quot;limit&quot;: limit},
+        headers=HEADERS,
+        timeout=30,
+    )
+    r.raise_for_status()
+    return r.json()
+
+
+def fetch_all_interviews():
+    results = []
+    page = 1
+    while True:
+        payload = fetch_interviews(page=page, limit=100)
+        results.extend(payload[&quot;data&quot;])
+        if page &gt;= payload[&quot;pagination&quot;][&quot;totalPages&quot;]:
+            break
+        page += 1
+    return results
+
+
+def fetch_latest():
+    r = requests.get(f&quot;{API_BASE}/api/v1/interviews/latest&quot;, headers=HEADERS, timeout=30)
+    if r.status_code == 404:
+        return None
+    r.raise_for_status()
+    return r.json()[&quot;data&quot;]
+
+
+def fetch_jobs():
+    r = requests.get(f&quot;{API_BASE}/api/v1/jobs&quot;, headers=HEADERS, timeout=30)
+    r.raise_for_status()
+    return r.json()[&quot;data&quot;]
+
+
+def fetch_new_since(last_seen_created_at, limit=10):
+    &quot;&quot;&quot;Entrevistas mais novas que last_seen_created_at (ISO 8601 UTC).&quot;&quot;&quot;
+    payload = fetch_interviews(page=1, limit=limit)
+    novas = [i for i in payload[&quot;data&quot;] if i[&quot;interview&quot;][&quot;created_at&quot;] &gt; last_seen_created_at]
+    return list(reversed(novas))  # da mais antiga para a mais recente
+</code></pre>
+</div>
+<h3 id="python-—-retry-com-backoff-exponencial" tabindex="-1">Python — retry com backoff exponencial</h3>
+<div class="code-block" data-language="python"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-python">import time
+from requests.exceptions import HTTPError
+
+RETRYABLE = {429, 500, 502, 503, 504}
+
+
+def get_with_retry(url, max_attempts=5):
+    delay = 1
+    for attempt in range(1, max_attempts + 1):
+        try:
+            r = requests.get(url, headers=HEADERS, timeout=30)
+            if r.status_code in RETRYABLE:
+                retry_after = int(r.headers.get(&quot;Retry-After&quot;, delay))
+                time.sleep(retry_after)
+                delay = min(delay * 2, 60)
+                continue
+            r.raise_for_status()
+            return r.json()
+        except HTTPError:
+            if attempt == max_attempts:
+                raise
+            time.sleep(delay)
+            delay = min(delay * 2, 60)
+    raise RuntimeError(&quot;Esgotadas as tentativas de retry&quot;)
+</code></pre>
+</div>
+<hr>
+</section>
+<section class="doc-section " data-section="boas-práticas"><h2 id="boas-práticas" tabindex="-1" data-number="10">Boas práticas</h2>
+<h3 id="sincronização-incremental-vs-completa" tabindex="-1">Sincronização incremental vs completa</h3>
+<ul>
+<li><strong>Sincronização completa</strong> (puxar tudo de novo): use para a carga inicial e para reconciliação semanal/mensal de auditoria.</li>
+<li><strong>Sincronização incremental</strong> (apenas o novo): use no dia-a-dia. Guarde o <code>created_at</code> da entrevista mais recente que você processou e pare a paginação ao encontrar uma entrevista com <code>created_at</code> menor ou igual.</li>
+</ul>
+<div class="code-block" data-language="javascript"><pre tabindex="0" aria-label="Exemplo de código"><code class="language-javascript">async function syncIncremental(lastKnownCreatedAt) {
+  let page = 1;
+  const novas = [];
+
+  while (true) {
+    const { data, pagination } = await fetchInterviews(page, 100);
+    for (const item of data) {
+      if (item.interview.created_at &lt;= lastKnownCreatedAt) return novas.reverse();
+      novas.push(item);
+    }
+    if (page &gt;= pagination.totalPages) return novas.reverse();
+    page++;
+    await new Promise((r) =&gt; setTimeout(r, 600));
+  }
+}
+</code></pre>
+</div>
+<p>Comparar por <code>created_at</code> em vez de por <code>id</code> é mais robusto: funciona mesmo que a entrevista de referência seja apagada.</p>
+<h3 id="cache-de-vagas" tabindex="-1">Cache de vagas</h3>
+<p>A lista de vagas (<code>/api/v1/jobs</code>) muda com baixa frequência. Cacheie por 5–15 minutos localmente para reduzir requisições.</p>
+<h3 id="aguardando-o-processamento-da-ia" tabindex="-1">Aguardando o processamento da IA</h3>
+<p>Uma entrevista recém-coletada pode aparecer com <code>overall_score</code>, <code>strengths</code>, <code>development_points</code> e <code>ai_summary</code> como <code>null</code>. O processamento pela IA leva alguns minutos. Estratégias:</p>
+<ol>
+<li><strong>Polling pelo ID:</strong> depois de detectar uma entrevista nova, refaça a busca periodicamente até <code>overall_score</code> deixar de ser <code>null</code>. (Hoje não há endpoint por ID; use <code>/interviews?limit=N</code> e filtre pelo <code>id</code>.)</li>
+<li><strong>Reprocessamento assíncrono no seu lado:</strong> marque a entrevista como &quot;pendente&quot; no seu sistema e reprocesse quando os campos preencherem.</li>
+</ol>
+<h3 id="charset-e-encoding" tabindex="-1">Charset e encoding</h3>
+<p>Garanta que seu cliente HTTP e seu banco de destino estejam em UTF-8. Os campos <code>cidade</code>, <code>logradouro</code>, etc. contêm acentos e cedilhas. Configurações de locale latin1/iso-8859-1 vão corromper esses dados.</p>
+<h3 id="logs-e-privacidade" tabindex="-1">Logs e privacidade</h3>
+<p><strong>Não logue payload completo de entrevistas</strong> em arquivos de log persistentes. Campos como CPF, email e telefone caem sob LGPD. Logue apenas o <code>id</code> da entrevista e métricas agregadas.</p>
+<hr>
+</section>
+<section class="doc-section " data-section="lgpd-e-proteção-de-dados"><h2 id="lgpd-e-proteção-de-dados" tabindex="-1" data-number="11">LGPD e proteção de dados</h2>
+<p>A API retorna dados pessoais e sensíveis de candidatos. Ao consumir esta API, você assume responsabilidades como operador (ou controlador, dependendo da relação contratual) sob a Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018).</p>
+<h3 id="dados-pessoais-expostos" tabindex="-1">Dados pessoais expostos</h3>
+<ul>
+<li><strong>Identificação:</strong> nome, e-mail, telefone, CPF.</li>
+<li><strong>Localização:</strong> CEP, endereço completo.</li>
+<li><strong>Avaliação:</strong> score, pontos fortes/fracos, resumo de IA.</li>
+<li><strong>Multimídia:</strong> link para vídeo da entrevista.</li>
+</ul>
+<h3 id="suas-responsabilidades" tabindex="-1">Suas responsabilidades</h3>
+<ol>
+<li><strong>Base legal:</strong> garanta que existe base legal válida para tratar esses dados (geralmente consentimento ou execução de contrato).</li>
+<li><strong>Finalidade:</strong> use os dados apenas para a finalidade prevista (avaliação de candidatos para processos seletivos).</li>
+<li><strong>Minimização:</strong> não copie dados que você não vai usar.</li>
+<li><strong>Retenção:</strong> defina prazo de retenção no seu sistema e expurgue dados após o término do processo seletivo (ou conforme política da sua empresa).</li>
+<li><strong>Segurança:</strong> criptografe em repouso, restrinja acesso, mantenha logs de auditoria.</li>
+<li><strong>Direitos do titular:</strong> implemente processo para atender solicitações dos candidatos (acesso, correção, exclusão, portabilidade).</li>
+<li><strong>Revisão de decisões automatizadas (Art. 20):</strong> o score e a avaliação por IA são decisões automatizadas. O candidato tem direito a solicitar revisão por pessoa natural. Garanta esse processo no seu fluxo.</li>
+</ol>
+<h3 id="recomendações-técnicas" tabindex="-1">Recomendações técnicas</h3>
+<ul>
+<li>Mascare CPF, email e telefone em interfaces que não exijam o dado completo.</li>
+<li><strong>Acesso por papel:</strong> nem todo usuário do seu sistema precisa ver dados de candidato. Aplique RBAC.</li>
+<li><strong>Audit log:</strong> registre quem acessou qual entrevista.</li>
+<li><strong>DPA / contrato:</strong> formalize o tratamento de dados em contrato com o operador da API.</li>
+<li><strong>Ao pedir suporte, nunca envie prints ou payloads com dados de candidato</strong> (por email, WhatsApp, tickets). Envie apenas o <code>id</code> da entrevista — com ele localizamos tudo.</li>
+</ul>
+<hr>
+</section>
+<section class="doc-section " data-section="versionamento-e-changelog"><h2 id="versionamento-e-changelog" tabindex="-1" data-number="12">Versionamento e changelog</h2>
+<h3 id="política-de-versionamento" tabindex="-1">Política de versionamento</h3>
+<p>A API segue SemVer. O caminho da URL inclui a major version (<code>/api/v1/</code>).</p>
+<ul>
+<li><strong>Patch (2.1.x)</strong> — correções de bug sem alteração de contrato. Não exige ação do cliente.</li>
+<li><strong>Minor (2.x.0)</strong> — novos campos opcionais nas respostas, novos endpoints. Não quebra clientes existentes.</li>
+<li><strong>Major (x.0.0)</strong> — mudanças incompatíveis. Quando ocorrer, será lançada como <code>/api/v2/</code> e a v1 ficará disponível por período mínimo de transição de 6 meses, com aviso prévio.</li>
+</ul>
+<h3 id="changelog" tabindex="-1">Changelog</h3>
+<p><strong>2.1.0 (atual) — Setembro/2026</strong></p>
+<p>Corrigido:</p>
+<ul>
+<li><code>/interviews</code> e <code>/interviews/latest</code> ordenavam por <code>interview.date</code> (string), produzindo ordem textual em vez de cronológica. <code>/latest</code> podia devolver uma entrevista antiga como &quot;última&quot; e a paginação vinha fora de ordem. Ambos passam a ordenar por <code>created_at</code>, com desempate determinístico por <code>id</code>.</li>
+</ul>
+<p>Adicionado:</p>
+<ul>
+<li>Campo <code>interview.created_at</code> (ISO 8601, UTC) em <code>/interviews</code> e <code>/interviews/latest</code>.</li>
+<li><code>/health</code> retorna <code>version</code> e <code>auth_mode</code>.</li>
+</ul>
+<p>Documentação:</p>
+<ul>
+<li><code>interview.date</code> estava documentado como horário de <code>America/Sao_Paulo</code>. <strong>É UTC.</strong> Corrigido, e o campo passa a ser considerado legado.</li>
+<li>URL de produção incluída.</li>
+<li>Esclarecimento sobre <code>id</code> (entrevista) vs <code>job.codigo</code> (vaga).</li>
+<li>Exemplos de polling e sync incremental reescritos sobre <code>created_at</code>.</li>
+</ul>
+<p>Segurança:</p>
+<ul>
+<li>Validação de formato da API key (<code>sk_</code> + 32 hex) antes de consultar o banco.</li>
+</ul>
+<p><strong>2.0.0 — Maio/2026</strong></p>
+<p>Adicionado:</p>
+<ul>
+<li>Em <code>/interviews</code> e <code>/interviews/latest</code>: campos <code>candidate.phone</code>, <code>candidate.cpf</code>, <code>candidate.video_url</code>, endereço completo (<code>candidate.address.*</code>), <code>job.codigo</code>, <code>interview.core10_link</code>.</li>
+<li>Em <code>/jobs</code>: campos <code>nice_to_have</code>, <code>codigo</code>, <code>testecomportamental</code>, <code>anexar_curriculo_obrigatorio</code>, <code>divulgar</code>, <code>perguntavideo</code>, <code>video</code>, <code>log_cargos</code>.</li>
+<li>Endpoint <code>/health</code> real (pinga o banco).</li>
+<li>Headers de rate limit nas respostas (RFC draft 7).</li>
+</ul>
+<p>Alterado (breaking):</p>
+<ul>
+<li><code>/interviews/latest</code> agora envelopa em <code>{ &quot;data&quot;: {...} }</code> (antes: objeto cru).</li>
+<li><code>/jobs</code> agora envelopa em <code>{ &quot;data&quot;: [...] }</code> (antes: array cru).</li>
+<li><code>/interviews/latest</code> retorna <code>404</code> quando não há entrevistas (antes: <code>500</code>).</li>
+<li><code>/interviews</code> retorna <code>400</code> quando <code>page</code> ou <code>limit</code> são inválidos (antes: comportamento indefinido).</li>
+<li><code>limit</code> máximo é agora 100 (antes: ilimitado).</li>
+</ul>
+<p>Segurança:</p>
+<ul>
+<li>Rate limiting habilitado.</li>
+<li>Headers HTTP de segurança (helmet).</li>
+<li>CORS configurável por whitelist.</li>
+</ul>
+<p><strong>1.1.0</strong></p>
+<ul>
+<li>Adicionada paginação em <code>/interviews</code>.</li>
+<li>Adicionado endpoint <code>/interviews/latest</code>.</li>
+</ul>
+<p><strong>1.0.0</strong></p>
+<ul>
+<li>Versão inicial.</li>
+</ul>
+<hr>
+</section>
+<section class="doc-section " data-section="suporte"><h2 id="suporte" tabindex="-1" data-number="13">Suporte</h2>
+<h3 id="canais" tabindex="-1">Canais</h3>
+<p><strong>Reportar bug ou comportamento inesperado:</strong> envie email para o contato técnico da sua conta com:</p>
+<ul>
+<li>Endpoint chamado</li>
+<li>Timestamp aproximado (com timezone)</li>
+<li>Status HTTP recebido</li>
+<li><strong><code>id</code> da entrevista</strong> envolvida (não envie o payload — ele contém dados pessoais)</li>
+<li><strong>Não inclua sua API key</strong> no email.</li>
+</ul>
+<p><strong>Rotação de API key:</strong> solicite via canal oficial. A rotação é imediata; a chave antiga deixa de funcionar.</p>
+<p><strong>Aumento de rate limit:</strong> rate limits podem ser ajustados sob demanda mediante justificativa.</p>
+<h3 id="antes-de-abrir-um-chamado" tabindex="-1">Antes de abrir um chamado</h3>
+<p>Verifique:</p>
+<ol>
+<li><strong>A URL base está correta?</strong> Faça <code>GET https://apisophia-632e2671412f.herokuapp.com/</code> e confirme que <code>status: &quot;online&quot;</code> é retornado.</li>
+<li><strong>O banco está saudável?</strong> Faça <code>GET /health</code>.</li>
+<li><strong>A API key está válida?</strong> O retorno <code>403</code> em todas as rotas confirma problema de credencial. Confira o comprimento (35 caracteres).</li>
+<li><strong>O <code>codigo_cliente</code> está correto?</strong> Listas vazias podem indicar que a chave pertence a um cliente sem dados, não a um bug.</li>
+<li><strong>A &quot;última entrevista&quot; parece errada?</strong> Confirme que está na 2.1.0 (<code>GET /</code> mostra <code>version</code>). Compare <code>interview.created_at</code> do que recebeu com o que esperava.</li>
+</ol>
+<h3 id="sla-e-disponibilidade" tabindex="-1">SLA e disponibilidade</h3>
+<p>A API depende do Supabase e da plataforma de hospedagem (Heroku). Em caso de incidente do provedor, podem ocorrer indisponibilidades. Acompanhe o status pelas páginas oficiais:</p>
+<ul>
+<li>Supabase: <a href="https://status.supabase.com">https://status.supabase.com</a></li>
+<li>Heroku: <a href="https://status.heroku.com">https://status.heroku.com</a></li>
+</ul>
+<hr>
+</section>
+<section class="doc-section " data-section="glossário"><h2 id="glossário" tabindex="-1" data-number="14">Glossário</h2>
+<div class="table-scroll" role="region" aria-label="Tabela da documentação" tabindex="0"><table>
+<thead>
+<tr>
+<th scope="col">Termo</th>
+<th scope="col">Definição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>API key</strong></td>
+<td>Chave secreta no formato <code>sk_&lt;32 chars hex&gt;</code> usada para autenticar requisições.</td>
+</tr>
+<tr>
+<td><strong>codigo_cliente</strong></td>
+<td>Identificador único da sua empresa no nosso sistema. Sua chave está vinculada a um único <code>codigo_cliente</code>.</td>
+</tr>
+<tr>
+<td><strong>codigo (de vaga)</strong></td>
+<td>Identificador legível da <strong>vaga</strong>, no formato <code>&lt;PREFIXO&gt;-&lt;NUMERO&gt;</code> (ex: <code>STAR-DIROP</code>). Uma vaga tem várias entrevistas.</td>
+</tr>
+<tr>
+<td><strong>interview_uuid / id</strong></td>
+<td>Identificador único universal de <strong>uma entrevista</strong>. Use como chave de correlação.</td>
+</tr>
+<tr>
+<td><strong>created_at</strong></td>
+<td>Instante de registro da entrevista, ISO 8601 em UTC. Campo de referência para ordenação e sincronização.</td>
+</tr>
+<tr>
+<td><strong>Core10</strong></td>
+<td>Sistema de avaliação comportamental aplicado durante a entrevista. O <code>core10_link</code> aponta para o relatório detalhado.</td>
+</tr>
+<tr>
+<td><strong>Polling</strong></td>
+<td>Técnica de consultar periodicamente um endpoint para detectar mudanças.</td>
+</tr>
+<tr>
+<td><strong>Rate limit</strong></td>
+<td>Limite de requisições permitidas em uma janela de tempo.</td>
+</tr>
+</tbody></table>
+</div>
+</section>
+</article>
+      <footer class="page-footer"><span><strong>SophIA</strong> <span class="muted">by StarMind</span><br>Interviews API · Documentação 2.1.0</span><a href="#guia-de-integração-—-interviews-api">Voltar ao início <span aria-hidden="true">↑</span></a></footer>
+    </main>
+  </div>
+  <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
+</body>
+</html>
