@@ -46,6 +46,9 @@
 <div class="nav-group" data-group="versionamento-e-changelog"><a class="nav-link" href="#versionamento-e-changelog"><span class="nav-number" aria-hidden="true">12</span><span>Versionamento e changelog</span></a><div class="subnav"><a href="#política-de-versionamento">Política de versionamento</a><a href="#changelog">Changelog</a></div></div>
 <div class="nav-group" data-group="suporte"><a class="nav-link" href="#suporte"><span class="nav-number" aria-hidden="true">13</span><span>Suporte</span></a><div class="subnav"><a href="#canais">Canais</a><a href="#antes-de-abrir-um-chamado">Antes de abrir um chamado</a><a href="#sla-e-disponibilidade">SLA e disponibilidade</a></div></div>
 <div class="nav-group" data-group="glossário"><a class="nav-link" href="#glossário"><span class="nav-number" aria-hidden="true">14</span><span>Glossário</span></a></div>
+<!-- BEGIN MCP NAV -->
+<div class="nav-group" data-group="mcp"><a class="nav-link" href="#mcp"><span class="nav-number" aria-hidden="true">15</span><span>MCP · Assistentes de IA</span></a><div class="subnav"><a href="#mcp-visao-geral">API e MCP</a><a href="#mcp-antes-de-comecar">Endereço e requisitos</a><a href="#mcp-credenciais">Credenciais e empresa</a><a href="#mcp-permissoes">Permissões e consentimento</a><a href="#mcp-chatgpt">Conectar no ChatGPT</a><a href="#mcp-claude">Conectar no Claude</a><a href="#mcp-outros-clientes">Outros clientes MCP</a><a href="#mcp-primeiro-uso">Primeiro uso</a><a href="#mcp-ferramentas">Catálogo de ferramentas</a><a href="#mcp-contrato">Contrato e exemplos</a><a href="#mcp-tarefas">Tarefas e resultados</a><a href="#mcp-arquivos">Arquivos e relatórios</a><a href="#mcp-linkedin">Publicar no LinkedIn</a><a href="#mcp-seguranca-limites">Segurança e limites</a><a href="#mcp-erros">Erros e reconexão</a><a href="#mcp-suporte">Validação e suporte</a></div></div>
+<!-- END MCP NAV -->
       </nav>
       <div class="sidebar-footer"><a href="guia-integracao-original.md" download>Baixar caderno original <span aria-hidden="true">↓</span></a><span>Atualizado em setembro de 2026</span></div>
     </aside>
@@ -61,6 +64,9 @@
 <blockquote>
 <p><strong>Migrando da 2.0.0?</strong> Leia a seção <a href="#o-que-mudou-na-210">O que mudou na 2.1.0</a> antes de qualquer coisa. A ordenação de entrevistas foi corrigida e o campo de data recomendado mudou.</p>
 </blockquote>
+<!-- BEGIN MCP INTRO LINK -->
+<p><strong>Integração com assistentes de IA:</strong> o <a href="#mcp">capítulo 15 — MCP</a> explica como conectar a SophIA ao ChatGPT, Claude e clientes compatíveis, com consultas e ações autorizadas. Os capítulos anteriores continuam dedicados à Interviews API de leitura.</p>
+<!-- END MCP INTRO LINK -->
 <hr>
 </section>
 <section class="doc-section " data-section="sumário"><h2 id="sumário" tabindex="-1">Sumário</h2>
@@ -86,6 +92,9 @@
 <li><a href="#versionamento-e-changelog">Versionamento e changelog</a></li>
 <li><a href="#suporte">Suporte</a></li>
 <li><a href="#gloss%C3%A1rio">Glossário</a></li>
+<!-- BEGIN MCP TOC -->
+<li><a href="#mcp">MCP — SophIA nos assistentes de IA</a></li>
+<!-- END MCP TOC -->
 </ol>
 <hr>
 </section>
@@ -1337,6 +1346,461 @@ def get_with_retry(url, max_attempts=5):
 </tbody></table>
 </div>
 </section>
+<!-- BEGIN SOPHIA MCP CHAPTER -->
+<section class="doc-section" data-section="mcp"><h2 id="mcp" tabindex="-1" data-number="15">MCP — SophIA nos assistentes de IA</h2>
+<p><strong>Servidor:</strong> SophIA MCP 1.0.0 · <strong>Atualização deste módulo:</strong> 29 de setembro de 2026<br><strong>Audiência:</strong> usuários da SophIA, administradores de integrações e desenvolvedores de clientes MCP.</p>
+<p>O <strong>Model Context Protocol (MCP)</strong> conecta assistentes como ChatGPT e Claude às ferramentas da SophIA. Você pode consultar entrevistas, criar vagas, preparar relatórios e realizar operações do painel pela conversa, dentro dos acessos da sua empresa e do seu usuário.</p>
+<blockquote><p><strong>Comece por aqui:</strong> solicite sua credencial individual, copie o <a href="#mcp-antes-de-comecar">endereço MCP</a> e siga o passo a passo do <a href="#mcp-chatgpt">ChatGPT</a> ou do <a href="#mcp-claude">Claude</a>. Escolha os acessos na página de autorização da SophIA. Não é necessário programar para usar a conexão.</p></blockquote>
+
+<h3 id="mcp-visao-geral" tabindex="-1">Quando usar a API e quando usar o MCP</h3>
+<p>Os capítulos 01 a 14 continuam documentando a Interviews API. Este capítulo trata de uma conexão com endereço, autenticação e contratos próprios. Uma chave da API não autentica o MCP.</p>
+<div class="table-scroll" role="region" aria-label="Comparação entre API e MCP" tabindex="0"><table><thead><tr><th scope="col">Aspecto</th><th scope="col">Interviews API</th><th scope="col">SophIA MCP</th></tr></thead><tbody>
+<tr><td>Uso principal</td><td>Integrar sistemas, ATS, CRM e BI por requisições REST.</td><td>Operar ferramentas do painel em assistentes de IA e clientes MCP.</td></tr>
+<tr><td>Ações</td><td>Consulta de entrevistas e vagas, somente leitura.</td><td>Consultas, criação, alterações, arquivos, envios e ações administrativas permitidas.</td></tr>
+<tr><td>Autenticação</td><td>API key no cabeçalho Bearer.</td><td>OAuth com consentimento no navegador; o cliente recebe tokens temporários.</td></tr>
+<tr><td>Identidade</td><td>Empresa vinculada à chave da API.</td><td>Empresa e usuário vinculados à credencial individual, com perfil e módulos atuais.</td></tr>
+<tr><td>Contrato</td><td>Endpoints e envelopes JSON dos capítulos anteriores.</td><td>Ferramentas e schemas descobertos por <code>tools/list</code>; chamadas via <code>tools/call</code>.</td></tr>
+<tr><td>Resultado</td><td>Resposta da consulta REST.</td><td>Ferramentas auxiliares diretas e operações de negócio acompanhadas por tarefa.</td></tr>
+</tbody></table></div>
+<p>O MCP utiliza os serviços do painel e o banco configurado para a implantação. Quando ambos apontam para o mesmo ambiente, uma alteração concluída na conversa aparece no painel. A conexão não reproduz todas as telas: o assistente recebe dados e resultados das ferramentas.</p>
+
+<h3 id="mcp-antes-de-comecar" tabindex="-1">Antes de começar: endereço e requisitos</h3>
+<p>Use o endereço completo abaixo no campo de URL do servidor/conector MCP:</p>
+<div class="code-block" data-language="texto"><pre tabindex="0" aria-label="Endereço do servidor MCP"><code>https://sophiamcp-29749696c578.herokuapp.com/mcp
+</code></pre></div>
+<ul>
+<li><strong>Credencial individual:</strong> ID e segredo emitidos pela equipe autorizada da SophIA para seu usuário e sua empresa.</li>
+<li><strong>Cadastro válido:</strong> usuário ativo no painel e troca da senha temporária concluída, quando exigida.</li>
+<li><strong>Cliente compatível:</strong> conta com acesso a conectores MCP remotos e autorização da organização, quando aplicável. Disponibilidade e nomes dos menus podem variar por conta e versão.</li>
+<li><strong>Recursos da empresa:</strong> módulos como Currículo Match, PJ e Redes Sociais precisam estar habilitados. Serviços de e-mail, análise de currículos e LinkedIn dependem das respectivas integrações.</li>
+</ul>
+<blockquote><p><strong>O caminho importa:</strong> cadastre a URL terminada em <code>/mcp</code>. A raiz do aplicativo e <code>/admin</code> são páginas administrativas; não são o endpoint da conexão. Use o ambiente informado pela equipe: um servidor ligado a uma base espelho retorna os dados desse espelho.</p></blockquote>
+
+<h3 id="mcp-credenciais" tabindex="-1">Credenciais por usuário e isolamento da empresa</h3>
+<p>Cada integração vincula um ID, um segredo e um conjunto de acessos a <strong>um usuário do painel e um <code>codigo_cliente</code></strong>. Pessoas da mesma empresa devem receber credenciais individuais para permitir atribuição e revogação do acesso de cada uma.</p>
+<p>A equipe autorizada emite a credencial pela <a href="https://sophiamcp-29749696c578.herokuapp.com/admin">área de gestão de integrações</a>: escolhe a empresa, o usuário existente, as permissões e a validade. O segredo aparece somente na criação ou renovação; não pode ser recuperado depois. O destinatário guarda esses dados e os informa apenas na página de autorização da SophIA.</p>
+<p>A área de gestão é restrita aos operadores internos com cadastro ERP ativo e <code>super=true</code>. Esse acesso é diferente do perfil administrador do painel do cliente. Receber uma credencial MCP não libera acesso à gestão de integrações.</p>
+<div class="table-scroll" role="region" aria-label="Identificadores e credenciais da conexão MCP" tabindex="0"><table><thead><tr><th scope="col">Dado</th><th scope="col">Para que serve</th><th scope="col">Onde usar</th></tr></thead><tbody>
+<tr><td>ID da integração</td><td>Identifica a credencial individual SophIA.</td><td>Formulário de autorização da SophIA, junto com o segredo.</td></tr>
+<tr><td>Segredo da integração</td><td>Comprova o acesso àquela credencial.</td><td>Somente no formulário SophIA. Nunca em prompts, código público ou chamados.</td></tr>
+<tr><td>OAuth Client ID</td><td>Identifica o cliente MCP, como ChatGPT ou Claude.</td><td>Registrado pelo próprio cliente no fluxo OAuth. Não é o ID da integração.</td></tr>
+<tr><td>Token OAuth</td><td>Autoriza chamadas temporárias ao MCP.</td><td>Gerenciado pelo cliente, enviado no cabeçalho Bearer.</td></tr>
+</tbody></table></div>
+<p><strong>Não preencha campos “OAuth Client ID” ou “OAuth Client Secret” com sua credencial SophIA.</strong> Esta implantação usa registro dinâmico de cliente público com PKCE. Os campos avançados opcionais de credenciais OAuth podem ficar vazios nesse fluxo.</p>
+<p>A identidade é resolvida no servidor. Pedir na conversa “use outra empresa” ou enviar outro <code>codigo_cliente</code> não muda a empresa autenticada. As consultas e ações continuam sujeitas ao usuário, à visibilidade dos registros e aos módulos habilitados. Para uma segunda empresa, é necessária uma credencial autorizada daquela empresa.</p>
+<p>A gestão permite editar permissões e validade, renovar o segredo ou revogar a integração. A renovação mantém o ID e substitui o segredo; a revogação encerra o acesso. Reconecte após mudanças que invalidem a autorização existente. Para desligar apenas um cliente de IA, prefira credenciais separadas por usuário e aplicativo.</p>
+
+<h3 id="mcp-permissoes" tabindex="-1">Permissões e consentimento</h3>
+<p>O acesso efetivo combina <strong>permissões da credencial, escopos consentidos no token, perfil atual do usuário e módulos da empresa</strong>. Ser administrador no painel não concede automaticamente todos os escopos ao ChatGPT ou ao Claude.</p>
+<div class="table-scroll" role="region" aria-label="Escopos de autorização SophIA MCP" tabindex="0"><table><thead><tr><th scope="col">Escopo</th><th scope="col">Na tela SophIA</th><th scope="col">Finalidade</th></tr></thead><tbody>
+<tr><td><code>sophia:read</code></td><td>Consultar dados</td><td>Base para consultar as ferramentas e os registros permitidos.</td></tr>
+<tr><td><code>sophia:write</code></td><td>Criar e alterar dados</td><td>Adicional à leitura para criar vagas, editar registros e preparar uploads.</td></tr>
+<tr><td><code>sophia:send</code></td><td>Enviar comunicações</td><td>Adicional à leitura e escrita para envios, convites e publicações externas.</td></tr>
+<tr><td><code>sophia:admin</code></td><td>Executar ações administrativas</td><td>Ações que exigem perfil ADM, além dos demais escopos necessários à ferramenta.</td></tr>
+</tbody></table></div>
+<p>Na página de autorização, a seção <strong>Acessos adicionais (opcional)</strong> permite selecionar os acessos ainda não pedidos pelo cliente. As caixas começam desmarcadas. Para criar uma vaga, autorize leitura e escrita; para publicar no LinkedIn, leitura, escrita e envio. Administração deve ser selecionada somente quando necessária e permitida.</p>
+<p>Quando sua credencial já está lembrada no navegador, as opções refletem os acessos atuais. Antes da identificação, a página pode mostrar as categorias conhecidas; o servidor valida a seleção ao confirmar. Marcar uma opção não amplia o perfil nem habilita um módulo contratado separadamente.</p>
+<p>Depois de selecionar, marque a confirmação geral e clique em <strong>Autorizar conexão</strong>. A nova conexão recebe os acessos aprovados. Tokens antigos não são ampliados por essa seleção; uma conexão que continua apenas com leitura precisa concluir um novo consentimento.</p>
+<blockquote><p><strong>Acesso e execução são etapas diferentes.</strong> Autorizar escrita não cria uma vaga. Autorizar envio não publica no LinkedIn. O usuário ainda precisa solicitar a operação; envios e ações destrutivas exigem aprovação explícita do conteúdo, destinatário ou registro afetado.</p></blockquote>
+
+<h3 id="mcp-chatgpt" tabindex="-1">Como conectar no ChatGPT</h3>
+<ol>
+<li>Abra <strong>Configurações → Segurança e login</strong> e habilite o <strong>Modo de desenvolvedor</strong>, quando disponível para sua conta. Em ambientes corporativos, confirme a liberação pelo administrador.</li>
+<li>Abra a área de <a href="https://chatgpt.com/plugins">Plugins</a>, clique em <strong>+</strong> e cadastre o nome <strong>SophIA</strong>, uma descrição e o endereço completo terminado em <code>/mcp</code> mostrado acima.</li>
+<li>Utilize <strong>OAuth</strong> quando houver escolha de autenticação. A descoberta e o registro do cliente são feitos pelo fluxo da conexão.</li>
+<li>Na página de autorização da SophIA, informe o ID e o segredo da integração, se solicitados. Confira a empresa e o usuário quando forem exibidos.</li>
+<li>Revise os acessos solicitados e selecione os adicionais necessários. Confirme em <strong>Autorizar conexão</strong> e aguarde o retorno ao ChatGPT.</li>
+<li>Revise as ferramentas disponibilizadas, abra uma conversa e selecione a SophIA no menu de ferramentas. Comece com a consulta de contexto sugerida em <a href="#mcp-primeiro-uso">Primeiro uso</a>.</li>
+</ol>
+<p>Se a opção de conexão personalizada não aparecer, verifique as regras e os recursos da conta/workspace. Após uma atualização do catálogo, use <strong>Atualizar/Refresh</strong> na conexão e inicie uma conversa nova para carregar as ferramentas atuais.</p>
+<p>Quando faltar um acesso permitido à sua credencial, o ChatGPT pode apresentar uma nova autorização. Confirme os escopos na página SophIA e depois retome a tarefa. O login lembrado pode dispensar redigitar o ID e o segredo, mas não substitui o consentimento.</p>
+
+<h3 id="mcp-claude" tabindex="-1">Como conectar no Claude e no Claude Desktop</h3>
+<ol>
+<li>No Claude, abra <strong>Personalizar/Customize → Conectores/Connectors</strong>.</li>
+<li>Clique em <strong>+ → Adicionar conector personalizado/Add custom connector</strong>. Informe o nome <strong>SophIA</strong> e a URL completa com <code>/mcp</code>.</li>
+<li>Mantenha vazios os campos avançados opcionais <strong>OAuth Client ID</strong> e <strong>OAuth Client Secret</strong> para usar o registro dinâmico desta implantação.</li>
+<li>Clique em <strong>Adicionar/Add</strong> e, se solicitado, em <strong>Conectar/Connect</strong>. Conclua a identificação na página de autorização da SophIA.</li>
+<li>Mesmo se o Claude pedir somente leitura, selecione <strong>Criar e alterar dados</strong> em <strong>Acessos adicionais (opcional)</strong> para criar vagas. Para publicar ou enviar, selecione também <strong>Enviar comunicações</strong>; selecione administração apenas se necessário.</li>
+<li>Marque a confirmação geral, clique em <strong>Autorizar conexão</strong> e retorne ao Claude. Habilite a SophIA na conversa, quando necessário, e consulte o contexto antes de alterar dados.</li>
+</ol>
+<p>Em uma organização, o responsável pode precisar cadastrar o conector nas configurações de conectores da organização antes de disponibilizá-lo. Cada usuário autentica sua própria credencial. No Claude Desktop, use o conector remoto associado à conta; este passo a passo não requer editar um arquivo de configuração de servidor local.</p>
+<blockquote><p><strong>Se o token continuar apenas com leitura:</strong> reconecte e selecione os acessos na página SophIA. Se a reconexão não abrir essa página, remova e adicione o conector novamente. Não dependa de o Claude abrir automaticamente um novo consentimento ao receber um erro de escopo. Dizer “você está autorizado” na conversa não altera o token OAuth.</p></blockquote>
+<p>Depois de retornar, abra uma conversa nova caso a anterior mantenha o estado antigo. Não é necessário gerar outro segredo apenas para autorizar escrita. Se o problema persistir após o consentimento, consulte o <a href="#mcp-erros">diagnóstico de permissões</a>.</p>
+
+<h3 id="mcp-outros-clientes" tabindex="-1">Outros clientes MCP: requisitos de compatibilidade</h3>
+<p>Um cliente adicional precisa suportar <strong>MCP remoto sobre Streamable HTTP</strong>, descoberta OAuth, authorization code com <strong>PKCE S256</strong>, registro dinâmico e renovação de tokens. O endereço de retorno OAuth deve ser HTTPS e estar permitido na configuração do servidor SophIA.</p>
+<p>Informe a mesma URL <code>/mcp</code> e use o fluxo de autorização do cliente. Não utilize a chave da Interviews API nem o segredo de integração como token Bearer. Um cliente que só suporta servidores locais por <code>stdio</code>, SSE legado ou um token estático não está coberto por esse procedimento.</p>
+<p><strong>Claude Code e clientes com callback local:</strong> clientes de terminal podem exigir retorno para <code>http://localhost:PORT/callback</code>. A implantação atual da SophIA rejeita retornos loopback em produção. Por isso, adicionar apenas a URL nesses clientes não comprova uma conexão funcional; valide o fluxo com a equipe técnica antes de anunciá-lo como suportado. O conector remoto do Claude web/Desktop é o caminho documentado acima.</p>
+
+<h3 id="mcp-primeiro-uso" tabindex="-1">Primeiro uso e exemplos de conversa</h3>
+<p>Ative a conexão na conversa e comece por uma consulta sem efeitos de negócio:</p>
+<div class="code-block" data-language="texto"><pre tabindex="0" aria-label="Consulta inicial de contexto"><code>Consulte meu contexto na SophIA. Informe a empresa, o usuário,
+as permissões desta conexão e os módulos disponíveis.
+Não altere nenhum dado.
+</code></pre></div>
+<p>O campo <code>scopes</code> informa o acesso do token atual. <code>scopes_disponiveis</code> informa os acessos que podem ser solicitados conforme a credencial, o perfil e os módulos. Ter escrita disponível não significa que ela já foi consentida.</p>
+<div class="code-block" data-language="texto"><pre tabindex="0" aria-label="Exemplo de consulta de entrevistas"><code>Liste as cinco entrevistas concluídas mais recentes da minha empresa.
+Mostre nome, cargo, nota, data e se o teste comportamental foi realizado.
+Informe quando algum dado não estiver disponível.
+</code></pre></div>
+<div class="code-block" data-language="texto"><pre tabindex="0" aria-label="Exemplo de criação de vaga"><code>Prepare uma vaga de Analista de Inteligência Artificial.
+Empresa confidencial, trabalho remoto, sem divulgar no portal,
+sem vídeo, sem currículo obrigatório e sem data de vencimento.
+Sugira um código ainda não utilizado e escreva descrição,
+responsabilidades, requisitos e diferenciais.
+Mostre a proposta e tire as dúvidas antes de salvar.
+</code></pre></div>
+<div class="code-block" data-language="texto"><pre tabindex="0" aria-label="Exemplo de publicação com prévia"><code>Localize a vaga pelo código que informei e confira a conta LinkedIn
+conectada à minha empresa. Prepare uma publicação somente em texto,
+sem imagem, e mostre a prévia. Aguarde minha aprovação para publicar.
+</code></pre></div>
+<p>Depois de aprovar uma ação, peça o acompanhamento até o resultado final. Para evitar duplicações, consulte a existência de vagas e publicações antes de criar novamente. Criar uma vaga pode iniciar as automações de análise habilitadas no painel; isso é diferente de publicar a vaga no portal ou no LinkedIn.</p>
+<p>Para solicitar acesso a uma ferramenta sem executá-la, o cliente pode chamar <code>sophia_contexto</code> com <code>solicitar_acesso_para</code>, por exemplo <code>vaga_criar</code> ou <code>linkedin_publicar</code>. A resposta <code>acesso_solicitado.autorizado=true</code> confirma apenas o acesso. No Claude, prefira selecionar os escopos no consentimento inicial se o cliente não abrir a autorização adicional.</p>
+
+<h3 id="mcp-ferramentas" tabindex="-1">Catálogo completo de ferramentas MCP</h3>
+<p>O catálogo desta versão contém <strong>95 ferramentas: 90 operações de negócio e 5 auxiliares</strong>. As cinco auxiliares respondem diretamente; todas as operações de negócio, inclusive consultas, retornam <code>operation_id</code> para acompanhamento. O cliente recebe somente as ferramentas permitidas à credencial, ao perfil e aos módulos da empresa. Uma ferramenta aparecer na lista não significa que o token atual já tenha todos os escopos necessários.</p>
+<p><strong>Legenda dos escopos:</strong> <strong>R</strong> = <code>sophia:read</code>; <strong>W</strong> = <code>sophia:write</code>; <strong>E</strong> = <code>sophia:send</code>; <strong>A</strong> = <code>sophia:admin</code>. As letras de cada linha são cumulativas: <strong>R + W + E</strong> exige as três permissões. <strong>ADM</strong> é o administrador do painel da empresa; <strong>todas as vagas</strong> é a visibilidade <code>all</code>. Recursos contratados, acesso aos registros e configurações dos provedores continuam sendo verificados.</p>
+<p>Consulte <code>tools/list</code> no cliente MCP para obter os parâmetros, tipos, campos obrigatórios, valores aceitos e descrições vigentes. Esse schema é a referência para chamadas programáticas; os nomes abaixo não são endpoints REST.</p>
+<h4 id="mcp-catalogo-auxiliares" tabindex="-1">Contexto, operações e arquivos · 5 ferramentas</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: Contexto, operações e arquivos" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th><th scope="col">Parâmetros e resultado</th></tr></thead>
+<tbody>
+<tr><td><code>sophia_contexto</code></td><td>Consultar ou solicitar meu acesso</td><td>R</td><td>Visibilidade do usuário</td><td><code>solicitar_acesso_para</code> opcional, com o nome exato da ferramenta.<br>Empresa, usuário, perfil, módulos, escopos do token e acessos disponíveis. Se o token já tiver o acesso, confirma a autorização. Se a credencial, o perfil e os módulos permitirem, pode solicitar consentimento adicional; caso contrário, recusa o pedido. Não executa essa ferramenta.</td></tr>
+<tr><td><code>sophia_tarefa</code></td><td>Consultar resultado de operação MCP</td><td>R</td><td>Visibilidade do usuário</td><td><code>operation_id</code> (UUID).<br>Estado e resultado de uma operação desta integração.</td></tr>
+<tr><td><code>sophia_operacoes</code></td><td>Listar minhas operações MCP</td><td>R</td><td>Visibilidade do usuário</td><td>Objeto vazio <code>{}</code>.<br>Até 30 operações recentes e acessíveis desta integração.</td></tr>
+<tr><td><code>sophia_preparar_upload</code></td><td>Preparar envio privado de arquivo</td><td>R + W</td><td>Visibilidade do usuário</td><td><code>nome</code> e <code>tamanho_bytes</code> exatos.<br><code>upload_id</code> e <code>upload_url</code> temporária. O usuário ainda precisa enviar o arquivo no navegador.</td></tr>
+<tr><td><code>sophia_arquivo</code></td><td>Consultar arquivo da integração</td><td>R</td><td>Visibilidade do usuário</td><td><code>file_id</code> (UUID).<br>Metadados do arquivo e, para uma saída disponível, link temporário de download.</td></tr>
+</tbody></table></div>
+<h4 id="mcp-catalogo-entrevistas" tabindex="-1">Entrevistas, etapas e relatórios · 13 ferramentas</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: Entrevistas, etapas e relatórios" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th></tr></thead>
+<tbody>
+<tr><td><code>entrevistas_listar</code></td><td>Listar entrevistas e indicadores</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>entrevistas_opcoes_filtros</code></td><td>Consultar opções dos filtros</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>entrevistas_kanban</code></td><td>Consultar Kanban</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>entrevista_consultar</code></td><td>Consultar detalhes da entrevista</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>entrevista_relatorio</code></td><td>Obter dossiê consolidado</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>entrevista_documento</code></td><td>Obter documento do candidato</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>entrevista_editar</code></td><td>Editar entrevista</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>entrevista_alterar_etapa</code></td><td>Alterar etapa de uma entrevista</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>entrevistas_alterar_etapa</code></td><td>Alterar etapas em lote</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>entrevista_excluir</code></td><td>Excluir entrevista</td><td>R + W + A</td><td>ADM do painel</td></tr>
+<tr><td><code>entrevistas_excluir</code></td><td>Excluir entrevistas em lote</td><td>R + W + A</td><td>ADM do painel</td></tr>
+<tr><td><code>entrevistas_exportar</code></td><td>Exportar relatórios de entrevistas</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>entrevistas_exportar_anexos</code></td><td>Preparar ZIP de anexos</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+</tbody></table></div>
+<h4 id="mcp-catalogo-vagas" tabindex="-1">Vagas e convites · 16 ferramentas</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: Vagas e convites" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th></tr></thead>
+<tbody>
+<tr><td><code>vagas_listar</code></td><td>Listar vagas</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>vaga_consultar</code></td><td>Consultar vaga</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>vaga_convite_consultar</code></td><td>Consultar convite de vaga</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>vaga_criar</code></td><td>Criar vaga</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>vaga_editar</code></td><td>Editar vaga</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>vaga_arquivar</code></td><td>Arquivar vaga</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>vagas_arquivar</code></td><td>Arquivar vagas em lote</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>vaga_reativar</code></td><td>Reativar vaga</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>vaga_excluir</code></td><td>Excluir vaga</td><td>R + W + A</td><td>ADM do painel</td></tr>
+<tr><td><code>vagas_excluir</code></td><td>Excluir vagas em lote</td><td>R + W + A</td><td>ADM do painel</td></tr>
+<tr><td><code>vaga_gerar_rascunho_ia</code></td><td>Gerar descrição com IA</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>vaga_enviar_convites_planilha</code></td><td>Enviar convites por planilha</td><td>R + W + E</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>vagas_exportar</code></td><td>Exportar vagas</td><td>R</td><td>Todas as vagas ou ADM</td></tr>
+<tr><td><code>vaga_whatsapp_consultar</code></td><td>Consultar convite e saldo WhatsApp</td><td>R</td><td>Todas as vagas ou ADM</td></tr>
+<tr><td><code>vaga_whatsapp_previa</code></td><td>Prévia de destinatários WhatsApp</td><td>R</td><td>Todas as vagas ou ADM</td></tr>
+<tr><td><code>vaga_whatsapp_enviar</code></td><td>Confirmar envio WhatsApp</td><td>R + W + E</td><td>Todas as vagas ou ADM</td></tr>
+</tbody></table></div>
+<h4 id="mcp-catalogo-feedback" tabindex="-1">Feedback e rascunhos de comunicação · 5 ferramentas</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: Feedback e rascunhos de comunicação" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th></tr></thead>
+<tbody>
+<tr><td><code>feedback_consultar</code></td><td>Consultar composição de feedback</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>feedback_preparar_lote</code></td><td>Preparar feedback em lote</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>feedback_enviar</code></td><td>Enviar feedback individual</td><td>R + W + E</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>feedback_enviar_lote</code></td><td>Enviar feedback em lote</td><td>R + W + E</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>template_gerar_rascunho_ia</code></td><td>Gerar rascunho de template com IA</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+</tbody></table></div>
+<h4 id="mcp-catalogo-configuracoes" tabindex="-1">Configurações da empresa · 9 ferramentas</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: Configurações da empresa" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th></tr></thead>
+<tbody>
+<tr><td><code>configuracoes_consultar</code></td><td>Consultar configurações da empresa</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>configuracoes_email</code></td><td>Alterar endereço de resposta</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>configuracoes_relatorios</code></td><td>Personalizar cabeçalho e rodapé</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>configuracoes_logo</code></td><td>Alterar logo dos relatórios</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>configuracoes_logo_remover</code></td><td>Remover logo dos relatórios</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>configuracoes_portal_logo</code></td><td>Alterar logo do portal público</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>configuracoes_portal_logo_remover</code></td><td>Remover logo do portal</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>configuracoes_portal</code></td><td>Editar redes e contato do portal</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>configuracoes_template</code></td><td>Salvar modelo de comunicação</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+</tbody></table></div>
+<h4 id="mcp-catalogo-usuarios" tabindex="-1">Usuários do painel · 4 ferramentas</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: Usuários do painel" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th></tr></thead>
+<tbody>
+<tr><td><code>usuarios_listar</code></td><td>Listar usuários da empresa</td><td>R + A</td><td>ADM do painel</td></tr>
+<tr><td><code>usuario_criar</code></td><td>Criar usuário da empresa</td><td>R + W + E + A</td><td>ADM do painel</td></tr>
+<tr><td><code>usuario_alterar_perfil</code></td><td>Alterar perfil de usuário</td><td>R + W + A</td><td>ADM do painel</td></tr>
+<tr><td><code>usuario_excluir</code></td><td>Excluir usuário</td><td>R + W + A</td><td>ADM do painel</td></tr>
+</tbody></table></div>
+<h4 id="mcp-catalogo-notificacoes" tabindex="-1">Notificações, tarefas, exportações e conta · 10 ferramentas</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: Notificações, tarefas, exportações e conta" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th></tr></thead>
+<tbody>
+<tr><td><code>notificacoes_listar</code></td><td>Consultar últimas notificações</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>notificacoes_contar</code></td><td>Contar notificações não lidas</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>notificacoes_historico</code></td><td>Consultar histórico de notificações</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>notificacao_marcar_lida</code></td><td>Marcar notificação como lida</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>notificacoes_marcar_todas_lidas</code></td><td>Marcar todas as notificações como lidas</td><td>R + W</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>tarefas_painel_status</code></td><td>Consultar status de tarefa</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>tarefas_painel_pagina</code></td><td>Consultar página da tarefa</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>conta_alterar_senha_no_navegador</code></td><td>Abrir fluxo seguro de troca de senha</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>exportacoes_listar</code></td><td>Consultar pacotes de exportação</td><td>R</td><td>Visibilidade do usuário</td></tr>
+<tr><td><code>exportacoes_obter</code></td><td>Obter pacote de exportação</td><td>R</td><td>Visibilidade do usuário</td></tr>
+</tbody></table></div>
+<h4 id="mcp-catalogo-curriculos" tabindex="-1">Currículo Match · 16 ferramentas</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: Currículo Match" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th></tr></thead>
+<tbody>
+<tr><td><code>cv_listar</code></td><td>Pesquisar currículos analisados</td><td>R</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_envios</code></td><td>Consultar envio de currículos</td><td>R</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_lote_status</code></td><td>Consultar status do lote</td><td>R</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_lote_diagnostico</code></td><td>Baixar diagnóstico do lote</td><td>R</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_enviar_arquivos</code></td><td>Enviar currículos PDF ou DOCX</td><td>R + W + E</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_enviar_zip</code></td><td>Enviar ZIP de currículos</td><td>R + W + E</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_candidato_obter</code></td><td>Consultar candidato do Currículo Match</td><td>R</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_candidato_editar</code></td><td>Editar dados extraídos do candidato</td><td>R + W</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_candidato_dossie</code></td><td>Gerar dossiê PDF do currículo</td><td>R</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_convite_previa</code></td><td>Consultar dados para convite</td><td>R</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_convidar</code></td><td>Enviar convite individual</td><td>R + W + E</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_convidar_massa</code></td><td>Enviar convites de currículos em lote</td><td>R + W + E</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_excluir</code></td><td>Excluir candidatos do Currículo Match</td><td>R + W + A</td><td>ADM do painel; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_exportar_filtrados</code></td><td>Exportar currículos filtrados para Excel</td><td>R</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_exportar_selecionados</code></td><td>Exportar currículos selecionados para Excel</td><td>R</td><td>Todas as vagas ou ADM; Currículo Match habilitado</td></tr>
+<tr><td><code>cv_recalcular_vaga</code></td><td>Recalcular currículos para uma vaga</td><td>R + W + A</td><td>ADM do painel; Currículo Match habilitado</td></tr>
+</tbody></table></div>
+<h4 id="mcp-catalogo-talentos" tabindex="-1">Banco de Talentos · 4 ferramentas</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: Banco de Talentos" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th></tr></thead>
+<tbody>
+<tr><td><code>talentos_listar</code></td><td>Consultar Banco de Talentos</td><td>R</td><td>Todas as vagas ou ADM</td></tr>
+<tr><td><code>talentos_analisar</code></td><td>Analisar Banco de Talentos para vaga</td><td>R + W</td><td>Todas as vagas ou ADM</td></tr>
+<tr><td><code>talentos_status</code></td><td>Consultar andamento da análise de talentos</td><td>R</td><td>Todas as vagas ou ADM</td></tr>
+<tr><td><code>talentos_convidar</code></td><td>Convidar candidatos do Banco de Talentos</td><td>R + W + E</td><td>Todas as vagas ou ADM</td></tr>
+</tbody></table></div>
+<h4 id="mcp-catalogo-linkedin" tabindex="-1">Redes Sociais / LinkedIn · 12 ferramentas</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: Redes Sociais / LinkedIn" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th></tr></thead>
+<tbody>
+<tr><td><code>linkedin_configuracao</code></td><td>Consultar conexão e templates do LinkedIn</td><td>R</td><td>Todas as vagas ou ADM; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_conectar</code></td><td>Iniciar conexão do LinkedIn no navegador</td><td>R + W + E + A</td><td>ADM do painel; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_sincronizar</code></td><td>Sincronizar conexão do LinkedIn</td><td>R + W + A</td><td>ADM do painel; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_desconectar</code></td><td>Desconectar conta LinkedIn</td><td>R + W + A</td><td>ADM do painel; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_template_criar</code></td><td>Criar template de publicação</td><td>R + W</td><td>Todas as vagas ou ADM; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_template_editar</code></td><td>Editar template de publicação</td><td>R + W</td><td>Todas as vagas ou ADM; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_template_excluir</code></td><td>Excluir template do LinkedIn</td><td>R + W</td><td>Todas as vagas ou ADM; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_imagem</code></td><td>Consultar imagem de template ou publicação</td><td>R</td><td>Todas as vagas ou ADM; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_gerar_rascunho</code></td><td>Gerar rascunho de publicação com IA</td><td>R + W</td><td>Todas as vagas ou ADM; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_publicacao_previa</code></td><td>Consultar prévia e histórico de publicação</td><td>R</td><td>Todas as vagas ou ADM; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_publicar</code></td><td>Publicar vaga no LinkedIn</td><td>R + W + E</td><td>Todas as vagas ou ADM; Redes Sociais / LinkedIn habilitado</td></tr>
+<tr><td><code>linkedin_publicacao_status</code></td><td>Consultar status da publicação</td><td>R</td><td>Todas as vagas ou ADM; Redes Sociais / LinkedIn habilitado</td></tr>
+</tbody></table></div>
+<h4 id="mcp-catalogo-analytics" tabindex="-1">People Analytics · 1 ferramenta</h4>
+<div class="table-scroll" role="region" aria-label="Ferramentas MCP: People Analytics" tabindex="0"><table>
+<thead><tr><th scope="col">Ferramenta</th><th scope="col">Função</th><th scope="col">Escopos</th><th scope="col">Perfil e recurso</th></tr></thead>
+<tbody>
+<tr><td><code>analytics_perguntar</code></td><td>Consultar People Analytics</td><td>R</td><td>Todas as vagas ou ADM; People Analytics habilitado</td></tr>
+</tbody></table></div>
+<blockquote><p><strong>Exclusões e envios:</strong> excluir entrevistas, vagas, candidatos do Currículo Match ou usuários exige ADM e os escopos correspondentes. Outras remoções, como logos e templates do LinkedIn, seguem as permissões específicas da tabela. Ferramentas destrutivas ou de efeito externo exigem <code>confirmar: true</code> e autorização explícita para o conteúdo, destinatários ou registros envolvidos. Uma permissão de envio também pode ser necessária para encaminhar currículos a um serviço externo de análise.</p></blockquote>
+<p><strong>People Analytics:</strong> <code>analytics_perguntar</code> faz análises somente de leitura. Envie uma pergunta completa, com o contexto necessário: a ferramenta não recupera conversas de outros logins nem mantém o histórico de chamadas. A disponibilidade depende do módulo e do serviço de IA configurados.</p>
+
+<h3 id="mcp-contrato" tabindex="-1">Contrato técnico e exemplos de chamadas</h3>
+<p>O cliente MCP inicia a conexão, descobre as ferramentas por <code>tools/list</code> e envia chamadas <code>tools/call</code> com argumentos validados pelo schema de cada ferramenta. O transporte usa POST HTTPS com JSON-RPC; o cliente gerencia a negociação de versão e os cabeçalhos. Esta implantação não exige uma sessão MCP persistente por conexão.</p>
+<p>O exemplo abaixo representa o corpo de uma chamada após autenticação e inicialização. Ele não é um endpoint REST novo:</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Consulta de contexto por MCP"><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "sophia_contexto",
+    "arguments": {}
+  }
+}
+</code></pre></div>
+<p>Para listar vagas com paginação explícita:</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Listagem de vagas por MCP"><code class="language-json">{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "tools/call",
+  "params": {
+    "name": "vagas_listar",
+    "arguments": {
+      "pagina": 1,
+      "por_pagina": 25,
+      "situacao": "active",
+      "modalidade": "all"
+    }
+  }
+}
+</code></pre></div>
+<p>Essa consulta é assíncrona. Use o <code>operation_id</code> retornado em uma chamada a <code>sophia_tarefa</code>. Depois percorra as páginas conforme a paginação retornada; a primeira página não representa necessariamente todas as vagas.</p>
+<h4 id="mcp-exemplo-vaga" tabindex="-1">Criar uma vaga após aprovação</h4>
+<p>Exemplo de argumentos de <code>vaga_criar</code>, usando somente dados ilustrativos. Gere um novo UUID em <code>request_id</code> para cada operação lógica; preserve-o apenas para repetir exatamente a mesma solicitação após falha de comunicação.</p>
+<div class="code-block" data-language="json"><pre tabindex="0" aria-label="Argumentos de criação de vaga"><code class="language-json">{
+  "request_id": "11111111-1111-4111-8111-111111111111",
+  "titulo": "Analista de Inteligência Artificial",
+  "empresa": "Confidencial",
+  "modelo_trabalho": "Remoto",
+  "sufixo": "ANALISTAIA01",
+  "pj": false,
+  "descricao": "Atuar na construção e avaliação de soluções de IA.",
+  "responsabilidades": ["Desenvolver e avaliar prompts e fluxos de IA."],
+  "requisitos": ["Experiência com análise de dados e aplicações de IA."],
+  "diferenciais": ["Conhecimento de RAG e integração de ferramentas."],
+  "solicitar_video": false,
+  "teste_comportamental": false,
+  "curriculo_obrigatorio": false,
+  "divulgar_portal": false,
+  "validade": null,
+  "maximo_entrevistas": 50,
+  "preparar_linkedin": false
+}
+</code></pre></div>
+<p><code>sufixo</code> aceita de 1 a 40 letras maiúsculas ou números, sem prefixo da empresa nem hífen. O servidor utiliza a empresa autenticada para compor o código. Consulte códigos existentes e históricos antes de escolher. <code>validade: null</code> significa sem vencimento; <code>preparar_linkedin</code> não publica automaticamente.</p>
+<div class="table-scroll" role="region" aria-label="Identificadores e formatos do MCP" tabindex="0"><table><thead><tr><th scope="col">Campo</th><th scope="col">Formato e uso</th></tr></thead><tbody>
+<tr><td><code>id</code> / <code>job_id</code></td><td>Nas ferramentas de entrevistas e vagas do MCP, ID numérico positivo ou sua representação em string. Use o valor retornado pela consulta MCP.</td></tr>
+<tr><td>IDs do Currículo Match</td><td>UUID do registro de currículo, diferente do identificador de entrevista ou vaga.</td></tr>
+<tr><td><code>operation_id</code></td><td>UUID da operação MCP. Não é o mesmo identificador de uma tarefa interna do painel.</td></tr>
+<tr><td><code>request_id</code></td><td>UUID de idempotência, obrigatório nas mutações de negócio. É diferente do <code>id</code> de correlação JSON-RPC.</td></tr>
+<tr><td><code>upload_id</code> / <code>file_id</code></td><td>UUID emitido pelo fluxo de arquivos; não aceita caminho local ou URL arbitrária como substituto.</td></tr>
+<tr><td>Datas</td><td>Filtros e validade usam <code>AAAA-MM-DD</code> quando previsto no schema. Filtros de entrevistas seguem o recorte UTC; informe o período desejado e converta horários para exibição.</td></tr>
+</tbody></table></div>
+<blockquote><p><strong>IDs da API e do MCP não são intercambiáveis.</strong> O UUID de entrevista documentado na Interviews API não deve ser enviado como ID numérico às ferramentas do painel MCP. Consulte o registro pelo módulo correspondente e use o identificador devolvido por ele.</p></blockquote>
+<h4 id="mcp-descoberta-oauth" tabindex="-1">Descoberta e endpoints de autenticação</h4>
+<div class="table-scroll" role="region" aria-label="Endpoints técnicos do servidor MCP" tabindex="0"><table><thead><tr><th scope="col">Método e caminho</th><th scope="col">Finalidade</th></tr></thead><tbody>
+<tr><td><code>POST /mcp</code></td><td>Mensagens MCP com token OAuth Bearer; cabeçalhos e negociação gerenciados pelo cliente MCP.</td></tr>
+<tr><td><code>GET /health</code></td><td>Verifica resposta do aplicativo e conexão com o banco; não comprova a saúde de todos os serviços externos.</td></tr>
+<tr><td><code>GET /.well-known/oauth-protected-resource/mcp</code></td><td>Metadados do recurso protegido. Também disponíveis em <code>/.well-known/oauth-protected-resource</code>.</td></tr>
+<tr><td><code>GET /.well-known/oauth-authorization-server</code></td><td>Emissor, escopos, registro e endpoints OAuth.</td></tr>
+<tr><td><code>POST /oauth/register</code></td><td>Registro dinâmico de cliente público, com callback validado.</td></tr>
+<tr><td><code>GET/POST /oauth/authorize</code></td><td>Autenticação e consentimento no navegador, vinculados à solicitação original.</td></tr>
+<tr><td><code>POST /oauth/token</code></td><td>Troca de código e renovação com rotação do refresh token.</td></tr>
+<tr><td><code>POST /oauth/revoke</code></td><td>Revogação de uma família de tokens vinculada ao cliente OAuth.</td></tr>
+</tbody></table></div>
+<p>Consulta de metadados, sem credenciais:</p>
+<div class="code-block" data-language="bash"><pre tabindex="0" aria-label="Consulta pública de metadados OAuth"><code class="language-bash">curl --fail --silent --show-error \
+  https://sophiamcp-29749696c578.herokuapp.com/.well-known/oauth-authorization-server
+</code></pre></div>
+<p>O fluxo usa <code>response_type=code</code>, <code>code_challenge_method=S256</code> e <code>resource</code> igual à URL completa <code>/mcp</code>. O cliente deve preservar <code>state</code>, conferir o emissor e usar exatamente o callback registrado. ID e segredo SophIA autenticam o formulário, não as chamadas Bearer.</p>
+<p>Para quem administra uma implantação, <code>PUBLIC_BASE_URL</code> identifica o emissor e precisa corresponder à origem pública HTTPS. <code>OAUTH_REDIRECT_ORIGINS</code> e, quando configurado, <code>OAUTH_REDIRECT_URIS</code> limitam os callbacks; <code>MCP_ALLOWED_ORIGINS</code> trata origens adicionais das chamadas MCP. São controles diferentes. Cadastre apenas os endereços efetivamente usados pelo cliente autorizado, sem curingas. Usuários finais não precisam alterar essas configurações.</p>
+
+<h3 id="mcp-tarefas" tabindex="-1">Tarefas, resultados e repetição segura</h3>
+<p>As 90 ferramentas de negócio, inclusive consultas, retornam inicialmente um <code>operation_id</code>. As cinco auxiliares respondem diretamente. O assistente deve acompanhar a operação com <code>sophia_tarefa</code>, respeitando um intervalo entre consultas.</p>
+<div class="table-scroll" role="region" aria-label="Estados das operações MCP" tabindex="0"><table><thead><tr><th scope="col">Estado</th><th scope="col">Interpretação</th><th scope="col">Próximo passo</th></tr></thead><tbody>
+<tr><td><code>queued</code></td><td>Aceita e aguardando execução.</td><td>Aguardar e consultar o mesmo <code>operation_id</code>.</td></tr>
+<tr><td><code>running</code></td><td>Em execução.</td><td>Continuar o acompanhamento sem reenviar a ação.</td></tr>
+<tr><td><code>succeeded</code></td><td>A etapa MCP terminou.</td><td>Ler o resultado. Se houver <code>task_id</code> interno, acompanhar também a tarefa do painel.</td></tr>
+<tr><td><code>failed</code></td><td>Falha conhecida.</td><td>Examinar a mensagem e corrigir a causa antes de decidir uma nova solicitação.</td></tr>
+<tr><td><code>uncertain</code></td><td>A execução foi interrompida ou o efeito não pôde ser confirmado.</td><td>Verificar o painel e o provedor antes de repetir. Não criar automaticamente outra solicitação.</td></tr>
+</tbody></table></div>
+<p>Quando o resultado contiver um <code>task_id</code> de exportação, análise ou envio, use <code>tarefas_painel_status</code>. Essa consulta também gera uma operação MCP, cujo resultado é obtido por <code>sophia_tarefa</code>. Para LinkedIn, confira ainda <code>linkedin_publicacao_status</code> e o link da publicação quando disponível.</p>
+<p>“Recebido” ou “enfileirado” não comprova entrega de e-mail nem publicação. <code>sophia_operacoes</code> recupera as últimas 30 operações visíveis da integração. Os resultados ficam disponíveis por sete dias; depois, consulte o painel.</p>
+<p>As mutações de negócio usam <code>request_id</code> para evitar duplicação: repetir a mesma ferramenta e os mesmos argumentos com o mesmo UUID recupera a solicitação existente. Reutilizar o UUID com outro conteúdo produz conflito. Gere outro UUID somente para uma operação realmente nova, depois de verificar o resultado anterior.</p>
+
+<h3 id="mcp-arquivos" tabindex="-1">Uploads, relatórios e downloads</h3>
+<ol>
+<li>O assistente chama <code>sophia_preparar_upload</code> com <code>nome</code> e <code>tamanho_bytes</code> exatos do arquivo.</li>
+<li>A SophIA retorna <code>upload_id</code> e <code>upload_url</code>. Abra o link, selecione o arquivo e conclua o envio no navegador.</li>
+<li>Volte à conversa e informe que enviou. A ferramenta de destino recebe o <code>upload_id</code>; preparar o link não inicia a análise nem a publicação.</li>
+<li>Para arquivos gerados, use <code>sophia_arquivo</code> com <code>file_id</code> para obter metadados e um link temporário de download.</li>
+</ol>
+<blockquote><p><strong>Anexar na conversa não basta:</strong> um arquivo enviado ao ChatGPT ou Claude não é automaticamente transferido para a SophIA. Utilize o fluxo de upload retornado pelo MCP. O mesmo vale para uma imagem criada pelo assistente para o LinkedIn.</p></blockquote>
+<div class="table-scroll" role="region" aria-label="Formatos e limites de arquivos MCP" tabindex="0"><table><thead><tr><th scope="col">Fluxo</th><th scope="col">Formatos e limites</th></tr></thead><tbody>
+<tr><td>Convites por planilha</td><td>CSV ou XLSX, até 5 MiB, com os cabeçalhos exigidos pelo fluxo de e-mail ou WhatsApp.</td></tr>
+<tr><td>Currículos individuais</td><td>De 1 a 10 arquivos PDF/DOCX por chamada, sujeitos aos limites do painel e do extrator.</td></tr>
+<tr><td>Lote de currículos</td><td>ZIP preparado pelo fluxo de upload; acompanhar o lote e o processamento.</td></tr>
+<tr><td>Logo de relatórios</td><td>PNG, JPEG ou GIF, até 5 MiB.</td></tr>
+<tr><td>Logo do portal</td><td>PNG, JPEG ou WebP, até 5 MiB.</td></tr>
+<tr><td>Imagem para LinkedIn</td><td>Upload autorizado e validação de imagem/tamanho pelo fluxo do painel. Para texto puro, use <code>imagem_origem: "nenhuma"</code>.</td></tr>
+<tr><td>Relatórios de entrevistas</td><td>CSV/XLSX; PDF combinado até 50; DOCX combinado até 1.000; ZIP com PDFs individuais até 25 ou DOCX individuais até 50.</td></tr>
+<tr><td>Seleção explícita de entrevistas</td><td>Até 500 IDs por chamada; use filtros quando o formato permitir uma exportação maior.</td></tr>
+<tr><td>Excel do Currículo Match</td><td>Até 5.000 candidatos por filtro ou seleção.</td></tr>
+<tr><td>ZIP de anexos</td><td>Padrão de até 500 registros; pode ser reduzido pela configuração ou pelo tamanho total.</td></tr>
+</tbody></table></div>
+<p>O preparo do upload vale duas horas. O registro de um artefato gerado vale 24 horas; os links assinados são mais curtos, normalmente dez minutos. Se um link de saída expirar e o artefato ainda estiver válido, solicite outro por <code>sophia_arquivo</code>.</p>
+<p>O limite padrão de preparo é 200 MiB e o de arquivo gerado é 160 MiB, ambos sujeitos à configuração do servidor, com teto de 200 MiB. Sempre prevalece o menor limite entre MCP, ferramenta, painel e provedor. Links temporários dão acesso ao arquivo: compartilhe somente com destinatários autorizados.</p>
+
+<h3 id="mcp-linkedin" tabindex="-1">Publicar no LinkedIn pela integração do painel</h3>
+<p>A conexão MCP utiliza a integração LinkedIn já vinculada à empresa. É necessário ter o módulo de Redes Sociais habilitado, a conta conectada e o serviço externo configurado, além dos escopos <code>sophia:read</code>, <code>sophia:write</code> e <code>sophia:send</code>. A publicação exige perfil com acesso a todos os registros ou ADM.</p>
+<ol>
+<li>Consulte a vaga e confirme código, conteúdo e situação. Consulte <code>linkedin_configuracao</code> para verificar a conta de destino.</li>
+<li>Prepare o texto e consulte a prévia/histórico com <code>linkedin_publicacao_previa</code>. Não reutilize automaticamente um template de outra vaga.</li>
+<li>Para texto puro, indique <code>imagem_origem: "nenhuma"</code>. Para imagem personalizada, conclua primeiro o upload e use o respectivo ID.</li>
+<li>Apresente a prévia e obtenha aprovação explícita. Só então chame <code>linkedin_publicar</code> com texto, vaga, <code>request_id</code> e <code>confirmar: true</code>.</li>
+<li>Acompanhe a operação, a tarefa interna quando houver e o status de publicação. Informe o link efetivamente retornado pelo serviço.</li>
+</ol>
+<p>Conectar ou trocar a conta LinkedIn pode abrir um consentimento próprio no navegador. Essa autorização da rede social é diferente do consentimento entre SophIA e ChatGPT/Claude. Reconectar o MCP não corrige, por si só, uma conta LinkedIn expirada ou um módulo desabilitado.</p>
+
+<h3 id="mcp-seguranca-limites" tabindex="-1">Segurança, sessões e limites de uso</h3>
+<p>O vínculo com a empresa é estabelecido pelo servidor. As ferramentas não oferecem SQL livre nem um campo para operar outra empresa. Perfil e módulos são reavaliados; excluir usuários, revogar integrações ou retirar permissões afeta os acessos correspondentes.</p>
+<p>Operações externas e destrutivas exigem <code>confirmar: true</code> no contrato, além da aprovação humana. Excluir entrevistas, vagas, currículos ou usuários exige as permissões administrativas previstas na ferramenta. Outras remoções, como logos e templates, seguem seus próprios requisitos. Não deduza o perfil exigido apenas pelo nome da ação.</p>
+<div class="table-scroll" role="region" aria-label="Sessões e limites operacionais MCP" tabindex="0"><table><thead><tr><th scope="col">Item</th><th scope="col">Comportamento atual</th></tr></thead><tbody>
+<tr><td>Token de acesso</td><td>Até dez minutos. O cliente pode renová-lo; isso não significa digitar credenciais a cada dez minutos.</td></tr>
+<tr><td>Família de renovação</td><td>Até 30 dias, limitada pela validade da integração e sujeita a revogação. Rotação de refresh tokens com detecção de reutilização.</td></tr>
+<tr><td>Login lembrado no navegador</td><td>Até oito horas, sem prolongamento a cada uso, quando o recurso estiver instalado. Novos acessos sempre exigem consentimento.</td></tr>
+<tr><td>Requisições MCP</td><td>180 por minuto por integração, incluindo consultas de andamento. HTTP 429 pode informar <code>Retry-After</code>.</td></tr>
+<tr><td>Operações pendentes</td><td>50 por integração por padrão; configurável pela administração. Aguarde a fila antes de enviar novas operações.</td></tr>
+<tr><td>Corpo da requisição</td><td>JSON até 512 KiB. Arquivos são enviados pelo fluxo próprio, não como conteúdo binário dentro da chamada MCP.</td></tr>
+<tr><td>Resultados e auditoria</td><td>Argumentos/resultados de operações expiram em sete dias; auditoria MCP tem retenção de 90 dias. Isso não define a retenção dos dados de negócio no painel.</td></tr>
+</tbody></table></div>
+<p>Apagar cookies, trocar de navegador, deixar a sessão expirar ou renovar o segredo pode exigir identificação novamente. O login do console administrativo, a sessão de consentimento e os tokens dos assistentes são independentes.</p>
+<p><strong>Uso simultâneo:</strong> painel, ChatGPT e Claude podem operar com suas autenticações. Quando usam a mesma base, alterações ficam compartilhadas; duas edições do mesmo registro podem conflitar ou sobrescrever valores conforme o fluxo do painel. Consulte a situação atual antes de gravar e evite repetir a mesma ação em duas conversas.</p>
+<p>Compartilhe com o assistente somente os dados necessários à tarefa e observe as políticas da sua organização e do provedor de IA. Não publique relatórios, currículos, links temporários ou credenciais em repositórios abertos. O consentimento MCP não libera faturamento, habilitação comercial de módulos nem alterações no aplicativo do candidato ou no extrator.</p>
+
+<h3 id="mcp-erros" tabindex="-1">Tratamento de erros e reconexão</h3>
+<p>Observe o resultado MCP e o estado da operação, além do status HTTP. Uma resposta HTTP 200 pode conter um erro de ferramenta ou uma operação que falhou. A mensagem “conexão expirada” exibida pelo cliente também pode envolver falta de escopo; consulte o contexto e o consentimento.</p>
+<div class="table-scroll" role="region" aria-label="Diagnóstico de problemas da conexão MCP" tabindex="0"><table><thead><tr><th scope="col">Sintoma</th><th scope="col">O que verificar</th></tr></thead><tbody>
+<tr><td>404 na conexão ou POST na raiz</td><td>Confirme o caminho <code>/mcp</code>, em vez da raiz ou <code>/admin</code>.</td></tr>
+<tr><td>GET /mcp não abre uma página</td><td>O endpoint é um transporte MCP. Abrir no navegador não equivale a conectar um cliente; use o cadastro de conector e OAuth.</td></tr>
+<tr><td>401 / token inválido</td><td>Sem token, expirado, revogado ou pertencente a outro recurso. Um 401 inicial faz parte da descoberta OAuth; repetição após autenticar exige verificar a conexão.</td></tr>
+<tr><td>403 / insufficient_scope</td><td>Compare <code>scopes</code> e <code>scopes_disponiveis</code>. Reconecte e aprove os acessos necessários na página SophIA; não basta o perfil ser administrador.</td></tr>
+<tr><td>Claude consulta, mas não cria vagas</td><td>Autorize <strong>Criar e alterar dados</strong> nos acessos adicionais. Remova/adicione novamente somente se for necessário para abrir o consentimento.</td></tr>
+<tr><td>Escrita autorizada, mas token ainda só leitura</td><td>Conclua o retorno ao cliente e inicie uma conversa nova. O suporte pode conferir se o cliente solicita explicitamente um token restrito durante a troca ou renovação.</td></tr>
+<tr><td>Credencial inválida ou sem acessos</td><td>ID e segredo mais recentes, validade, usuário ativo, troca da senha temporária e permissões da credencial. Desmarque opções que sua credencial não permite ou solicite revisão à equipe.</td></tr>
+<tr><td>Origem ou retorno OAuth inválido</td><td>Reinicie a conexão a partir do cliente. A equipe técnica deve conferir a origem HTTPS pública e o callback permitido; não use URLs de callback como comandos de terminal.</td></tr>
+<tr><td>Erro 400 / argumentos inválidos</td><td>Consulte o schema atual, tipos de IDs, enumerações, campos obrigatórios e datas. Atualize o catálogo da conexão.</td></tr>
+<tr><td>Erro 409 / conflito de solicitação</td><td>O mesmo <code>request_id</code> foi usado com conteúdo diferente. Consulte a operação original antes de criar uma nova.</td></tr>
+<tr><td>Erro 429 / limite atingido</td><td>Respeite <code>Retry-After</code>, reduza a frequência de consultas e aguarde operações pendentes.</td></tr>
+<tr><td>Ferramenta ausente ou módulo negado</td><td>Perfil, visibilidade, escopos e módulo habilitado para a empresa. Reconectar não habilita recursos comerciais.</td></tr>
+<tr><td>Tarefa permanece queued/running</td><td>Consulte o mesmo ID. A equipe verifica worker, fila e serviços externos; não duplique a ação.</td></tr>
+<tr><td>Estado uncertain</td><td>Confira painel e provedor. Não trate como falha definitiva nem repita automaticamente um envio.</td></tr>
+<tr><td>Download expirado</td><td>Peça outro link por <code>sophia_arquivo</code> enquanto o artefato estiver válido; após expirar o registro, avalie gerar o arquivo novamente.</td></tr>
+<tr><td>LinkedIn ou Currículo Match falha</td><td>Verifique a tarefa, a integração externa e o módulo da empresa. Credenciais OAuth do MCP não substituem a conexão do provedor.</td></tr>
+</tbody></table></div>
+<p>Para desenvolvedores: o desafio de escopo usa HTTP 403 com <code>WWW-Authenticate</code> para clientes genéricos. O ChatGPT recebe a sinalização compatível em <code>_meta["mcp/www_authenticate"]</code>. Cabe ao cliente conduzir a nova autorização. Um cliente que solicite explicitamente um escopo reduzido continua recebendo acesso reduzido, mesmo que uma concessão anterior seja mais ampla.</p>
+<p>O suporte pode usar o log <code>[OAUTH] token_issued</code>, que registra somente <code>grant_type</code>, <code>requested_scope</code>, <code>access_scope</code> e <code>refresh_scope</code>. <code>requested_scope: null</code> indica que o parâmetro foi omitido. Nunca envie tokens, códigos de autorização, segredos ou corpos completos de requisição para diagnóstico.</p>
+
+<h3 id="mcp-suporte" tabindex="-1">Validação, suporte e referências</h3>
+<p>Antes de disponibilizar a conexão para uma equipe:</p>
+<ol>
+<li>Confirme empresa, usuário e permissões pelo contexto, usando uma credencial por pessoa.</li>
+<li>Valide uma consulta e compare os dados com o painel no mesmo ambiente.</li>
+<li>Teste uma alteração autorizada e acompanhe a operação até o resultado final.</li>
+<li>Para arquivos e envios, valide upload/download, destinatário ou conta de destino e acompanhamento da tarefa externa.</li>
+<li>Confirme que um perfil restrito e uma segunda empresa não acessam registros indevidos, e que revogar uma credencial interrompe novas operações.</li>
+</ol>
+<p>Em um chamado, informe o cliente utilizado (ChatGPT, Claude ou outro), horário com fuso, ferramenta, código/status do erro, <code>operation_id</code> ou ID da requisição quando disponível e passos para reproduzir. Utilize o contato técnico da sua conta, conforme o <a href="#suporte">capítulo de suporte</a>. Não envie credenciais nem relatórios pessoais completos.</p>
+<p>As instruções de interface foram conferidas em 29/09/2026. Nomes dos menus e disponibilidade podem mudar; a documentação oficial do cliente complementa este guia:</p>
+<ul>
+<li><a href="https://developers.openai.com/plugins/deploy/connect-chatgpt">OpenAI — conectar e testar um plugin no ChatGPT</a>.</li>
+<li><a href="https://developers.openai.com/plugins/build/auth">OpenAI — autenticação OAuth de plugins</a>.</li>
+<li><a href="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp">Claude — conectar servidores MCP remotos</a>.</li>
+<li><a href="https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities">Claude — usar conectores na conta</a>.</li>
+<li><a href="https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization">MCP — autorização e desafios de escopo</a>.</li>
+</ul>
+</section>
+<!-- END SOPHIA MCP CHAPTER -->
 </article>
       <footer class="page-footer"><span><strong>SophIA</strong> <span class="muted">by StarMind</span><br>Interviews API · Documentação 2.1.0</span><a href="#guia-de-integração-—-interviews-api">Voltar ao início <span aria-hidden="true">↑</span></a></footer>
     </main>
