@@ -47,7 +47,7 @@
 <div class="nav-group" data-group="suporte"><a class="nav-link" href="#suporte"><span class="nav-number" aria-hidden="true">13</span><span>Suporte</span></a><div class="subnav"><a href="#canais">Canais</a><a href="#antes-de-abrir-um-chamado">Antes de abrir um chamado</a><a href="#sla-e-disponibilidade">SLA e disponibilidade</a></div></div>
 <div class="nav-group" data-group="glossário"><a class="nav-link" href="#glossário"><span class="nav-number" aria-hidden="true">14</span><span>Glossário</span></a></div>
 <!-- BEGIN MCP NAV -->
-<div class="nav-group" data-group="mcp"><a class="nav-link" href="#mcp"><span class="nav-number" aria-hidden="true">15</span><span>MCP · Assistentes de IA</span></a><div class="subnav"><a href="#mcp-visao-geral">API e MCP</a><a href="#mcp-antes-de-comecar">Endereço e requisitos</a><a href="#mcp-credenciais">Credenciais e empresa</a><a href="#mcp-permissoes">Permissões e consentimento</a><a href="#mcp-chatgpt">Conectar no ChatGPT</a><a href="#mcp-claude">Conectar no Claude</a><a href="#mcp-outros-clientes">Outros clientes MCP</a><a href="#mcp-primeiro-uso">Primeiro uso</a><a href="#mcp-ferramentas">Catálogo de ferramentas</a><a href="#mcp-contrato">Contrato e exemplos</a><a href="#mcp-tarefas">Tarefas e resultados</a><a href="#mcp-arquivos">Arquivos e relatórios</a><a href="#mcp-linkedin">Publicar no LinkedIn</a><a href="#mcp-seguranca-limites">Segurança e limites</a><a href="#mcp-erros">Erros e reconexão</a><a href="#mcp-suporte">Validação e suporte</a></div></div>
+<div class="nav-group" data-group="mcp"><a class="nav-link" href="#mcp"><span class="nav-number" aria-hidden="true">15</span><span>MCP · Assistentes de IA</span></a><div class="subnav"><a href="#mcp-visao-geral">API e MCP</a><a href="#mcp-antes-de-comecar">Endereço e requisitos</a><a href="#mcp-credenciais">Credenciais e empresa</a><a href="#mcp-ativacao">E-mail e ativação</a><a href="#mcp-gestao">Gestão e arquivamento</a><a href="#mcp-termos">Termos e responsabilidades</a><a href="#mcp-permissoes">Permissões e consentimento</a><a href="#mcp-chatgpt">Conectar no ChatGPT</a><a href="#mcp-claude">Conectar no Claude</a><a href="#mcp-outros-clientes">Outros clientes MCP</a><a href="#mcp-primeiro-uso">Primeiro uso</a><a href="#mcp-ferramentas">Catálogo de ferramentas</a><a href="#mcp-contrato">Contrato e exemplos</a><a href="#mcp-tarefas">Tarefas e resultados</a><a href="#mcp-arquivos">Arquivos e relatórios</a><a href="#mcp-linkedin">Publicar no LinkedIn</a><a href="#mcp-seguranca-limites">Segurança e limites</a><a href="#mcp-erros">Erros e reconexão</a><a href="#mcp-suporte">Validação e suporte</a></div></div>
 <!-- END MCP NAV -->
       </nav>
       <div class="sidebar-footer"><a href="guia-integracao-original.md" download>Baixar caderno original <span aria-hidden="true">↓</span></a><span>Atualizado em setembro de 2026</span></div>
@@ -1348,9 +1348,9 @@ def get_with_retry(url, max_attempts=5):
 </section>
 <!-- BEGIN SOPHIA MCP CHAPTER -->
 <section class="doc-section" data-section="mcp"><h2 id="mcp" tabindex="-1" data-number="15">MCP — SophIA nos assistentes de IA</h2>
-<p><strong>Servidor:</strong> SophIA MCP 1.0.0 · <strong>Atualização deste módulo:</strong> 29 de setembro de 2026<br><strong>Audiência:</strong> usuários da SophIA, administradores de integrações e desenvolvedores de clientes MCP.</p>
+<p><strong>Servidor:</strong> SophIA MCP 1.0.0 · <strong>Atualização deste módulo:</strong> 30 de setembro de 2026<br><strong>Audiência:</strong> usuários da SophIA, administradores de integrações e desenvolvedores de clientes MCP.</p>
 <p>O <strong>Model Context Protocol (MCP)</strong> conecta assistentes como ChatGPT e Claude às ferramentas da SophIA. Você pode consultar entrevistas, criar vagas, preparar relatórios e realizar operações do painel pela conversa, dentro dos acessos da sua empresa e do seu usuário.</p>
-<blockquote><p><strong>Comece por aqui:</strong> solicite sua credencial individual, copie o <a href="#mcp-antes-de-comecar">endereço MCP</a> e siga o passo a passo do <a href="#mcp-chatgpt">ChatGPT</a> ou do <a href="#mcp-claude">Claude</a>. Escolha os acessos na página de autorização da SophIA. Não é necessário programar para usar a conexão.</p></blockquote>
+<blockquote><p><strong>Comece por aqui:</strong> solicite seu convite individual, abra o <a href="#mcp-ativacao">e-mail de ativação</a> e leia os termos. Após concordar, copie a URL do MCP, o ID e o segredo exibidos na página. Siga o passo a passo do <a href="#mcp-chatgpt">ChatGPT</a> ou do <a href="#mcp-claude">Claude</a> e escolha os acessos na autorização da SophIA. Não é necessário programar nem executar comandos no Heroku para receber e utilizar sua credencial.</p></blockquote>
 
 <h3 id="mcp-visao-geral" tabindex="-1">Quando usar a API e quando usar o MCP</h3>
 <p>Os capítulos 01 a 14 continuam documentando a Interviews API. Este capítulo trata de uma conexão com endereço, autenticação e contratos próprios. Uma chave da API não autentica o MCP.</p>
@@ -1362,25 +1362,28 @@ def get_with_retry(url, max_attempts=5):
 <tr><td>Contrato</td><td>Endpoints e envelopes JSON dos capítulos anteriores.</td><td>Ferramentas e schemas descobertos por <code>tools/list</code>; chamadas via <code>tools/call</code>.</td></tr>
 <tr><td>Resultado</td><td>Resposta da consulta REST.</td><td>Ferramentas auxiliares diretas e operações de negócio acompanhadas por tarefa.</td></tr>
 </tbody></table></div>
-<p>O MCP utiliza os serviços do painel e o banco configurado para a implantação. Quando ambos apontam para o mesmo ambiente, uma alteração concluída na conversa aparece no painel. A conexão não reproduz todas as telas: o assistente recebe dados e resultados das ferramentas.</p>
+<p>O MCP utiliza os serviços de negócio incorporados ao seu próprio aplicativo e o banco configurado para a implantação. Quando MCP e painel apontam para o mesmo ambiente, uma alteração concluída na conversa aparece no painel. Ele não abre nem lê as telas do painel antes de executar: o assistente recebe dados e resultados das ferramentas. Alterar o código ou a interface do painel não atualiza automaticamente o servidor MCP; mudanças de regras precisam ser avaliadas também nessa implantação.</p>
 
 <h3 id="mcp-antes-de-comecar" tabindex="-1">Antes de começar: endereço e requisitos</h3>
-<p>Use o endereço completo abaixo no campo de URL do servidor/conector MCP:</p>
+<p>Use a <strong>URL do MCP exibida após o aceite</strong> no campo de URL do servidor/conector. Esse é o endereço oficial da implantação que emitiu sua credencial. Um exemplo de endereço no Heroku é:</p>
 <div class="code-block" data-language="texto"><pre tabindex="0" aria-label="Endereço do servidor MCP"><code>https://sophiamcp-29749696c578.herokuapp.com/mcp
 </code></pre></div>
 <ul>
-<li><strong>Credencial individual:</strong> ID e segredo emitidos pela equipe autorizada da SophIA para seu usuário e sua empresa.</li>
+<li><strong>Credencial individual ativada:</strong> ID e segredo revelados ao destinatário após o aceite dos termos, vinculados ao seu usuário e à sua empresa. Credenciais anteriores ainda válidas continuam utilizáveis.</li>
 <li><strong>Cadastro válido:</strong> usuário ativo no painel e troca da senha temporária concluída, quando exigida.</li>
 <li><strong>Cliente compatível:</strong> conta com acesso a conectores MCP remotos e autorização da organização, quando aplicável. Disponibilidade e nomes dos menus podem variar por conta e versão.</li>
 <li><strong>Recursos da empresa:</strong> módulos como Currículo Match, PJ e Redes Sociais precisam estar habilitados. Serviços de e-mail, análise de currículos e LinkedIn dependem das respectivas integrações.</li>
 </ul>
 <blockquote><p><strong>O caminho importa:</strong> cadastre a URL terminada em <code>/mcp</code>. A raiz do aplicativo e <code>/admin</code> são páginas administrativas; não são o endpoint da conexão. Use o ambiente informado pela equipe: um servidor ligado a uma base espelho retorna os dados desse espelho.</p></blockquote>
+<p><strong>Domínio próprio:</strong> a URL pode usar o domínio Heroku ou um domínio personalizado configurado pela equipe com DNS e HTTPS válidos. Por exemplo, se a origem configurada for <code>https://integracao.starmindai.ai</code>, a conexão usará <code>https://integracao.starmindai.ai/mcp</code>. Esse domínio é um exemplo; use o endereço que aparecer no seu aceite.</p>
+<p><strong>Para a equipe técnica:</strong> a tela calcula a URL a partir de <code>PUBLIC_BASE_URL</code>, que deve conter somente a origem HTTPS, sem <code>/mcp</code>. Mantenha uma origem oficial por vez. Trocar essa origem altera a identidade OAuth do serviço e exige atualizar a URL e reconectar os clientes; não exige, por si só, gerar outro ID ou segredo.</p>
 
 <h3 id="mcp-credenciais" tabindex="-1">Credenciais por usuário e isolamento da empresa</h3>
 <p>Cada integração vincula um ID, um segredo e um conjunto de acessos a <strong>um usuário do painel e um <code>codigo_cliente</code></strong>. Pessoas da mesma empresa devem receber credenciais individuais para permitir atribuição e revogação do acesso de cada uma.</p>
-<p>A equipe autorizada emite a credencial pela <a href="https://sophiamcp-29749696c578.herokuapp.com/admin">área de gestão de integrações</a>: escolhe a empresa, o usuário existente, as permissões e a validade. O segredo aparece somente na criação ou renovação; não pode ser recuperado depois. O destinatário guarda esses dados e os informa apenas na página de autorização da SophIA.</p>
+<p>A equipe autorizada acessa <code>/admin</code> na origem oficial do aplicativo, escolhe a empresa, o usuário existente, as permissões e a validade e envia um convite. O e-mail de destino vem do cadastro do usuário na SophIA. <strong>O administrador não recebe nem visualiza o segredo.</strong> A credencial fica inativa até o destinatário aceitar os termos pelo link pessoal.</p>
 <p>A área de gestão é restrita aos operadores internos com cadastro ERP ativo e <code>super=true</code>. Esse acesso é diferente do perfil administrador do painel do cliente. Receber uma credencial MCP não libera acesso à gestão de integrações.</p>
 <div class="table-scroll" role="region" aria-label="Identificadores e credenciais da conexão MCP" tabindex="0"><table><thead><tr><th scope="col">Dado</th><th scope="col">Para que serve</th><th scope="col">Onde usar</th></tr></thead><tbody>
+<tr><td>URL do MCP</td><td>Endereço oficial do servidor, terminado em <code>/mcp</code>.</td><td>Cadastro da SophIA como plugin/conector no assistente. Copie da tela após o aceite.</td></tr>
 <tr><td>ID da integração</td><td>Identifica a credencial individual SophIA.</td><td>Formulário de autorização da SophIA, junto com o segredo.</td></tr>
 <tr><td>Segredo da integração</td><td>Comprova o acesso àquela credencial.</td><td>Somente no formulário SophIA. Nunca em prompts, código público ou chamados.</td></tr>
 <tr><td>OAuth Client ID</td><td>Identifica o cliente MCP, como ChatGPT ou Claude.</td><td>Registrado pelo próprio cliente no fluxo OAuth. Não é o ID da integração.</td></tr>
@@ -1388,9 +1391,44 @@ def get_with_retry(url, max_attempts=5):
 </tbody></table></div>
 <p><strong>Não preencha campos “OAuth Client ID” ou “OAuth Client Secret” com sua credencial SophIA.</strong> Esta implantação usa registro dinâmico de cliente público com PKCE. Os campos avançados opcionais de credenciais OAuth podem ficar vazios nesse fluxo.</p>
 <p>A identidade é resolvida no servidor. Pedir na conversa “use outra empresa” ou enviar outro <code>codigo_cliente</code> não muda a empresa autenticada. As consultas e ações continuam sujeitas ao usuário, à visibilidade dos registros e aos módulos habilitados. Para uma segunda empresa, é necessária uma credencial autorizada daquela empresa.</p>
-<p>A gestão permite editar permissões e validade, renovar o segredo ou revogar a integração. A renovação mantém o ID e substitui o segredo; a revogação encerra o acesso. Reconecte após mudanças que invalidem a autorização existente. Para desligar apenas um cliente de IA, prefira credenciais separadas por usuário e aplicativo.</p>
+<p>Empresa e usuário não podem ser trocados na edição de uma credencial. Para outro destinatário ou empresa, emita uma nova. Se quiser revogar separadamente o acesso no ChatGPT e no Claude, emita credenciais distintas para o mesmo usuário, identificando cada aplicativo no nome da conexão.</p>
+
+<h3 id="mcp-ativacao" tabindex="-1">Receber o e-mail, aceitar os termos e guardar a credencial</h3>
+<ol>
+<li>Solicite o acesso à equipe responsável, informando o usuário e a empresa já cadastrados na SophIA.</li>
+<li>Localize o e-mail <strong>Ative seu acesso pessoal à SophIA MCP</strong>. Ele contém o link pessoal, o prazo, o contato de segurança e a indicação desta documentação em <a href="https://devsophia.starmindai.ai/">devsophia.starmindai.ai</a>. <strong>O e-mail não contém o ID nem o segredo.</strong></li>
+<li>Abra o link e confira destinatário, empresa, permissões, prazo do convite e eventual validade do acesso. Leia a versão dos termos apresentada.</li>
+<li>Se concordar, informe seu nome completo, marque a concordância e clique em <strong>Concordar e revelar minha credencial</strong>. Se não concordar, use <strong>Não aceito os termos</strong>; o convite será revogado e nenhum segredo será revelado.</li>
+<li>Após o aceite, a tela apresenta <strong>URL do MCP</strong>, <strong>ID da integração</strong> e <strong>Segredo da integração</strong>. Use <strong>Copiar URL</strong>, <strong>Copiar ID</strong>, <strong>Copiar segredo</strong> ou <strong>Copiar todos os dados</strong>.</li>
+<li>Guarde os dados em um gerenciador de senhas antes de sair. O segredo é exibido uma única vez e não pode ser consultado novamente. Depois de salvar, use <strong>Já guardei. Ocultar credencial</strong> e limpe a área de transferência.</li>
+<li>Use a URL para cadastrar o conector e informe o ID e o segredo somente na página oficial de autorização da SophIA aberta pelo assistente. Nunca cole o segredo na conversa.</li>
+</ol>
+<blockquote><p><strong>Dois prazos diferentes:</strong> o convite vale <strong>duas horas por padrão</strong>, ajustáveis pela administração. É preciso concluir o aceite nesse prazo; abrir o link não o prorroga. A validade do acesso após a ativação, quando definida, é independente e pode reduzir o prazo disponível para aceitar. Sem aceite, não há acesso. Se perder o segredo após ativar, solicite a renovação à equipe.</p></blockquote>
+<p>Se o e-mail não chegar, confira o spam e peça à equipe para verificar a entrega. A indicação <strong>Enviado</strong> significa que o provedor aceitou o envio, não que a mensagem chegou à caixa de entrada. Um reenvio invalida o link anterior; use sempre o convite mais recente.</p>
+
+<h3 id="mcp-gestao" tabindex="-1">Gestão interna: filtros, edição, renovação e arquivamento</h3>
+<p>Esta seção é destinada à equipe interna autorizada. Entre em <code>/admin</code> com o e-mail e a senha do ERP; é necessário cadastro ativo e <code>super=true</code>. O perfil ADM de um cliente da SophIA não concede esse acesso.</p>
+<p>Em <strong>Nova credencial</strong>, selecione empresa, usuário, nome da conexão, permissões e validade opcional. Clique em <strong>Criar e enviar convite</strong>. A emissão e a renovação usam o fluxo de e-mail e aceite; não é necessário gerar segredos pelo terminal.</p>
+<p>Na lista, combine a busca por nome, e-mail, empresa ou ID com os filtros <strong>Empresa</strong> (código exato de quatro letras), <strong>Situação</strong>, <strong>Permissão</strong> e <strong>Arquivo</strong>. O padrão oculta as arquivadas; é possível mostrar somente as arquivadas ou incluí-las na lista. <strong>Limpar filtros</strong> restaura a consulta padrão.</p>
+<div class="table-scroll" role="region" aria-label="Ações de gestão das credenciais MCP" tabindex="0"><table><thead><tr><th scope="col">Ação</th><th scope="col">Quando usar</th><th scope="col">Efeito</th></tr></thead><tbody>
+<tr><td>Editar</td><td>Credencial ativa.</td><td>Altera nome, permissões e validade. Alterar apenas o nome preserva as conexões; mudanças nas permissões ou na validade exigem nova autorização OAuth.</td></tr>
+<tr><td>Editar nome</td><td>Credencial pendente ou vencida.</td><td>Altera somente o nome, sem ativar o acesso, reenviar o convite, mudar permissões ou prorrogar prazos.</td></tr>
+<tr><td>Reenviar convite</td><td>Convite pendente ou expirado, enquanto a validade final do acesso ainda permitir a ativação.</td><td>Invalida o link anterior e envia outro ao mesmo destinatário, com os termos e o prazo atuais. Não se aplica a credenciais já ativadas cuja validade terminou.</td></tr>
+<tr><td>Novo segredo</td><td>Credencial ativa; por exemplo, quando o usuário perdeu o segredo.</td><td>Ao confirmar <strong>Renovar e enviar convite</strong>, o acesso anterior é revogado imediatamente. O ID permanece; outro segredo será gerado e revelado somente após um novo aceite.</td></tr>
+<tr><td>Revogar</td><td>Encerrar o acesso.</td><td>Invalida a credencial, as conexões OAuth e os convites pendentes. Para conceder novo acesso, crie outra credencial.</td></tr>
+<tr><td>Arquivar</td><td>Retirar uma credencial da lista padrão, preservando os registros.</td><td>Exige confirmar <strong>Arquivar e revogar</strong>. Encerra o acesso e os convites, preserva o histórico e deixa a credencial somente para consulta. Não permite editar, renovar, reenviar ou reativar a credencial arquivada.</td></tr>
+</tbody></table></div>
+<p>O histórico registra o operador responsável e a integração/empresa envolvida. Arquivar uma credencial não exclui o usuário, os dados de negócio ou os registros de aceite e não revoga as credenciais de outras pessoas.</p>
+<p><strong>Para a equipe técnica:</strong> envios dependem de <code>SENDGRID_API_KEY</code> e <code>SENDGRID_FROM</code> válidos. O recurso de arquivamento exige a migração <code>2026-10-01_mcp_credential_archive.sql</code>; a listagem e os procedimentos anteriores continuam disponíveis antes dela. As estruturas de controle ficam no schema privado <code>mcp_app</code>, que não deve ser exposto pela API pública do Supabase.</p>
+
+<h3 id="mcp-termos" tabindex="-1">Termos, versões e responsabilidade pelos dados compartilhados</h3>
+<p>Em <strong>Termos e entrega</strong>, a equipe interna pode editar razão social, CNPJ, contato de segurança, prazo do convite e texto dos termos. O prazo pode variar de <strong>15 a 1.440 minutos</strong>, com padrão de 120 minutos. A configuração inicial identifica <strong>Starmind S/A, CNPJ 41.233.730/0001-10</strong> e <a href="mailto:contato@starmindai.ai">contato@starmindai.ai</a>; prevalecem os dados e condições apresentados no convite.</p>
+<p><strong>Salvar nova versão</strong> vale para os próximos convites. Não substitui o texto nem o prazo de convites já emitidos e não exige novo aceite de credenciais ativas. Para que um convite pendente utilize as condições atuais, reenvie-o. O aceite registra a versão e o conteúdo correspondente, o destinatário, o nome informado, a empresa, a data e dados técnicos de segurança. É um <strong>aceite eletrônico</strong>, sem certificado ICP-Brasil.</p>
+<p>Conectar um assistente permite que ele receba as informações retornadas pelas ferramentas. Outros aplicativos, como e-mail, agenda ou armazenamento, podem receber dados quando o usuário solicita ou autoriza essas ações. Utilize somente serviços autorizados pela sua empresa, compartilhe o mínimo necessário e confira destinatários e políticas de privacidade, retenção e eventual treinamento de modelos.</p>
+<p>Revogar a conexão não apaga automaticamente cópias já transmitidas a serviços externos. Leia a versão exibida no seu convite: este manual explica o funcionamento e não substitui os termos apresentados para aceite.</p>
 
 <h3 id="mcp-permissoes" tabindex="-1">Permissões e consentimento</h3>
+<p><strong>O aceite da credencial e a autorização do aplicativo são etapas distintas.</strong> Aceitar os termos ativa a credencial; o consentimento OAuth define quais acessos o ChatGPT, Claude ou outro cliente poderá utilizar. Uma etapa não substitui a outra.</p>
 <p>O acesso efetivo combina <strong>permissões da credencial, escopos consentidos no token, perfil atual do usuário e módulos da empresa</strong>. Ser administrador no painel não concede automaticamente todos os escopos ao ChatGPT ou ao Claude.</p>
 <div class="table-scroll" role="region" aria-label="Escopos de autorização SophIA MCP" tabindex="0"><table><thead><tr><th scope="col">Escopo</th><th scope="col">Na tela SophIA</th><th scope="col">Finalidade</th></tr></thead><tbody>
 <tr><td><code>sophia:read</code></td><td>Consultar dados</td><td>Base para consultar as ferramentas e os registros permitidos.</td></tr>
@@ -1404,10 +1442,11 @@ def get_with_retry(url, max_attempts=5):
 <blockquote><p><strong>Acesso e execução são etapas diferentes.</strong> Autorizar escrita não cria uma vaga. Autorizar envio não publica no LinkedIn. O usuário ainda precisa solicitar a operação; envios e ações destrutivas exigem aprovação explícita do conteúdo, destinatário ou registro afetado.</p></blockquote>
 
 <h3 id="mcp-chatgpt" tabindex="-1">Como conectar no ChatGPT</h3>
+<p>Tenha a credencial já ativada e a URL copiada da tela de aceite. Se ainda não recebeu o segredo, conclua primeiro o <a href="#mcp-ativacao">convite por e-mail</a>.</p>
 <ol>
 <li>Abra <strong>Configurações → Segurança e login</strong> e habilite o <strong>Modo de desenvolvedor</strong>, quando disponível para sua conta. Em ambientes corporativos, confirme a liberação pelo administrador.</li>
-<li>Abra a área de <a href="https://chatgpt.com/plugins">Plugins</a>, clique em <strong>+</strong> e cadastre o nome <strong>SophIA</strong>, uma descrição e o endereço completo terminado em <code>/mcp</code> mostrado acima.</li>
-<li>Utilize <strong>OAuth</strong> quando houver escolha de autenticação. A descoberta e o registro do cliente são feitos pelo fluxo da conexão.</li>
+<li>Abra a área de <a href="https://chatgpt.com/plugins">Plugins</a>, clique em <strong>+</strong> e cadastre o nome <strong>SophIA</strong>, uma descrição e a URL do MCP copiada após o aceite, terminada em <code>/mcp</code>.</li>
+<li>Utilize <strong>OAuth</strong> quando houver escolha de autenticação. A descoberta e o registro do cliente são feitos pelo fluxo da conexão. Deixe vazios os campos opcionais <strong>OAuth Client ID</strong> e <strong>OAuth Client Secret</strong>; eles não recebem o ID e o segredo da integração SophIA.</li>
 <li>Na página de autorização da SophIA, informe o ID e o segredo da integração, se solicitados. Confira a empresa e o usuário quando forem exibidos.</li>
 <li>Revise os acessos solicitados e selecione os adicionais necessários. Confirme em <strong>Autorizar conexão</strong> e aguarde o retorno ao ChatGPT.</li>
 <li>Revise as ferramentas disponibilizadas, abra uma conversa e selecione a SophIA no menu de ferramentas. Comece com a consulta de contexto sugerida em <a href="#mcp-primeiro-uso">Primeiro uso</a>.</li>
@@ -1416,15 +1455,16 @@ def get_with_retry(url, max_attempts=5):
 <p>Quando faltar um acesso permitido à sua credencial, o ChatGPT pode apresentar uma nova autorização. Confirme os escopos na página SophIA e depois retome a tarefa. O login lembrado pode dispensar redigitar o ID e o segredo, mas não substitui o consentimento.</p>
 
 <h3 id="mcp-claude" tabindex="-1">Como conectar no Claude e no Claude Desktop</h3>
+<p>Conclua primeiro o <a href="#mcp-ativacao">aceite do convite</a> e tenha em mãos a URL, o ID e o segredo da integração.</p>
 <ol>
 <li>No Claude, abra <strong>Personalizar/Customize → Conectores/Connectors</strong>.</li>
-<li>Clique em <strong>+ → Adicionar conector personalizado/Add custom connector</strong>. Informe o nome <strong>SophIA</strong> e a URL completa com <code>/mcp</code>.</li>
+<li>Clique em <strong>+ → Adicionar conector personalizado/Add custom connector</strong>. Informe o nome <strong>SophIA</strong> e a URL copiada da tela de aceite, terminada em <code>/mcp</code>.</li>
 <li>Mantenha vazios os campos avançados opcionais <strong>OAuth Client ID</strong> e <strong>OAuth Client Secret</strong> para usar o registro dinâmico desta implantação.</li>
 <li>Clique em <strong>Adicionar/Add</strong> e, se solicitado, em <strong>Conectar/Connect</strong>. Conclua a identificação na página de autorização da SophIA.</li>
 <li>Mesmo se o Claude pedir somente leitura, selecione <strong>Criar e alterar dados</strong> em <strong>Acessos adicionais (opcional)</strong> para criar vagas. Para publicar ou enviar, selecione também <strong>Enviar comunicações</strong>; selecione administração apenas se necessário.</li>
-<li>Marque a confirmação geral, clique em <strong>Autorizar conexão</strong> e retorne ao Claude. Habilite a SophIA na conversa, quando necessário, e consulte o contexto antes de alterar dados.</li>
+<li>Marque a confirmação geral, clique em <strong>Autorizar conexão</strong> e retorne ao Claude. Na conversa, use <strong>+ → Conectores/Connectors</strong> para habilitar a SophIA, quando necessário, e consulte o contexto antes de alterar dados.</li>
 </ol>
-<p>Em uma organização, o responsável pode precisar cadastrar o conector nas configurações de conectores da organização antes de disponibilizá-lo. Cada usuário autentica sua própria credencial. No Claude Desktop, use o conector remoto associado à conta; este passo a passo não requer editar um arquivo de configuração de servidor local.</p>
+<p>Em uma organização, um proprietário (<strong>Owner/Primary Owner</strong>) pode precisar cadastrar o conector em <strong>Organization settings → Connectors → Add → Custom → Web</strong> antes de disponibilizá-lo. Cada usuário autentica sua própria credencial. No Claude Desktop, use o conector remoto associado à conta; este passo a passo não requer editar um arquivo de configuração de servidor local.</p>
 <blockquote><p><strong>Se o token continuar apenas com leitura:</strong> reconecte e selecione os acessos na página SophIA. Se a reconexão não abrir essa página, remova e adicione o conector novamente. Não dependa de o Claude abrir automaticamente um novo consentimento ao receber um erro de escopo. Dizer “você está autorizado” na conversa não altera o token OAuth.</p></blockquote>
 <p>Depois de retornar, abra uma conversa nova caso a anterior mantenha o estado antigo. Não é necessário gerar outro segredo apenas para autorizar escrita. Se o problema persistir após o consentimento, consulte o <a href="#mcp-erros">diagnóstico de permissões</a>.</p>
 
@@ -1456,7 +1496,16 @@ conectada à minha empresa. Prepare uma publicação somente em texto,
 sem imagem, e mostre a prévia. Aguarde minha aprovação para publicar.
 </code></pre></div>
 <p>Depois de aprovar uma ação, peça o acompanhamento até o resultado final. Para evitar duplicações, consulte a existência de vagas e publicações antes de criar novamente. Criar uma vaga pode iniciar as automações de análise habilitadas no painel; isso é diferente de publicar a vaga no portal ou no LinkedIn.</p>
-<p>Para solicitar acesso a uma ferramenta sem executá-la, o cliente pode chamar <code>sophia_contexto</code> com <code>solicitar_acesso_para</code>, por exemplo <code>vaga_criar</code> ou <code>linkedin_publicar</code>. A resposta <code>acesso_solicitado.autorizado=true</code> confirma apenas o acesso. No Claude, prefira selecionar os escopos no consentimento inicial se o cliente não abrir a autorização adicional.</p>
+<p>Para solicitar acesso a uma ferramenta sem executá-la, o cliente pode chamar <code>sophia_contexto</code> com <code>solicitar_acesso_para</code>, por exemplo <code>vaga_criar</code> ou <code>linkedin_publicar</code>. A resposta <code>acesso_solicitado.autorizado=true</code> confirma apenas o acesso. Esse comando é um recurso de diagnóstico/autorização, não uma etapa obrigatória a cada conexão. No Claude, prefira selecionar os escopos no consentimento inicial se o cliente não abrir a autorização adicional.</p>
+<h4 id="mcp-aplicativos-combinados" tabindex="-1">Combinar a SophIA com outros aplicativos</h4>
+<p>Quando o assistente também tiver outro aplicativo conectado e autorizado, pode combinar consultas da SophIA com as ferramentas desse aplicativo. Por exemplo, consultar candidatos e preparar convites na sua agenda. O acesso à agenda depende da outra conexão; a SophIA MCP não ganha acesso automático a ela.</p>
+<div class="code-block" data-language="texto"><pre tabindex="0" aria-label="Exemplo de SophIA com agenda conectada"><code>Na SophIA, consulte os candidatos da vaga que informei e sugira os dez
+mais bem classificados, explicando os critérios e os dados disponíveis.
+Usando minha agenda conectada, proponha horários de entrevista.
+Mostre nomes, e-mails, horários e texto dos convites para minha aprovação.
+Não envie convites antes de eu confirmar.
+</code></pre></div>
+<p>Confira as informações e autorizações em cada etapa. A disponibilidade desse fluxo depende das ferramentas oferecidas pelo assistente e pela agenda conectada; não significa compatibilidade automática com qualquer aplicativo.</p>
 
 <h3 id="mcp-ferramentas" tabindex="-1">Catálogo completo de ferramentas MCP</h3>
 <p>O catálogo desta versão contém <strong>95 ferramentas: 90 operações de negócio e 5 auxiliares</strong>. As cinco auxiliares respondem diretamente; todas as operações de negócio, inclusive consultas, retornam <code>operation_id</code> para acompanhamento. O cliente recebe somente as ferramentas permitidas à credencial, ao perfil e aos módulos da empresa. Uma ferramenta aparecer na lista não significa que o token atual já tenha todos os escopos necessários.</p>
@@ -1744,30 +1793,39 @@ sem imagem, e mostre a prévia. Aguarde minha aprovação para publicar.
 
 <h3 id="mcp-seguranca-limites" tabindex="-1">Segurança, sessões e limites de uso</h3>
 <p>O vínculo com a empresa é estabelecido pelo servidor. As ferramentas não oferecem SQL livre nem um campo para operar outra empresa. Perfil e módulos são reavaliados; excluir usuários, revogar integrações ou retirar permissões afeta os acessos correspondentes.</p>
+<p><strong>Proteção adicional de dados, para a equipe técnica:</strong> o servidor dispõe de um modo opcional com acesso PostgreSQL próprio, políticas RLS específicas e contexto da empresa autenticada. Ele exige configuração e verificação antes de ativar <code>MCP_TENANT_ISOLATION_ENABLED=true</code>; o padrão é desativado. A instalação desse recurso não comprova que ele esteja ativo no ambiente. A conexão administrativa/OAuth permanece separada, e as permissões e políticas dos outros aplicativos não devem ser alteradas para habilitá-lo. A presença de RLS nas tabelas, sozinha, não comprova que o papel usado pelo MCP esteja sujeito a essas políticas.</p>
 <p>Operações externas e destrutivas exigem <code>confirmar: true</code> no contrato, além da aprovação humana. Excluir entrevistas, vagas, currículos ou usuários exige as permissões administrativas previstas na ferramenta. Outras remoções, como logos e templates, seguem seus próprios requisitos. Não deduza o perfil exigido apenas pelo nome da ação.</p>
 <div class="table-scroll" role="region" aria-label="Sessões e limites operacionais MCP" tabindex="0"><table><thead><tr><th scope="col">Item</th><th scope="col">Comportamento atual</th></tr></thead><tbody>
+<tr><td>Convite de ativação</td><td>120 minutos por padrão, ajustáveis entre 15 e 1.440 minutos e limitados pela validade final da credencial. Exige concluir o aceite antes do vencimento.</td></tr>
+<tr><td>Credencial individual</td><td>Pode ter validade final definida pela equipe. Sem data final, continua sujeita a revogação, arquivamento e revalidação do usuário/permissões.</td></tr>
 <tr><td>Token de acesso</td><td>Até dez minutos. O cliente pode renová-lo; isso não significa digitar credenciais a cada dez minutos.</td></tr>
 <tr><td>Família de renovação</td><td>Até 30 dias, limitada pela validade da integração e sujeita a revogação. Rotação de refresh tokens com detecção de reutilização.</td></tr>
 <tr><td>Login lembrado no navegador</td><td>Até oito horas, sem prolongamento a cada uso, quando o recurso estiver instalado. Novos acessos sempre exigem consentimento.</td></tr>
+<tr><td>Sessão da gestão interna</td><td>Até 30 minutos de inatividade ou oito horas desde o login; depende da elegibilidade atual do operador ERP.</td></tr>
 <tr><td>Requisições MCP</td><td>180 por minuto por integração, incluindo consultas de andamento. HTTP 429 pode informar <code>Retry-After</code>.</td></tr>
 <tr><td>Operações pendentes</td><td>50 por integração por padrão; configurável pela administração. Aguarde a fila antes de enviar novas operações.</td></tr>
 <tr><td>Corpo da requisição</td><td>JSON até 512 KiB. Arquivos são enviados pelo fluxo próprio, não como conteúdo binário dentro da chamada MCP.</td></tr>
 <tr><td>Resultados e auditoria</td><td>Argumentos/resultados de operações expiram em sete dias; auditoria MCP tem retenção de 90 dias. Isso não define a retenção dos dados de negócio no painel.</td></tr>
 </tbody></table></div>
-<p>Apagar cookies, trocar de navegador, deixar a sessão expirar ou renovar o segredo pode exigir identificação novamente. O login do console administrativo, a sessão de consentimento e os tokens dos assistentes são independentes.</p>
+<p>Apagar cookies, trocar de navegador, deixar a sessão expirar ou renovar o segredo pode exigir identificação novamente. Revogar ou arquivar a credencial também invalida seu acesso lembrado. O login do console administrativo, a ativação do convite, a sessão de consentimento e os tokens dos assistentes são independentes. Reconectar para aprovar novos escopos não exige gerar outro segredo enquanto a credencial atual continuar válida.</p>
 <p><strong>Uso simultâneo:</strong> painel, ChatGPT e Claude podem operar com suas autenticações. Quando usam a mesma base, alterações ficam compartilhadas; duas edições do mesmo registro podem conflitar ou sobrescrever valores conforme o fluxo do painel. Consulte a situação atual antes de gravar e evite repetir a mesma ação em duas conversas.</p>
 <p>Compartilhe com o assistente somente os dados necessários à tarefa e observe as políticas da sua organização e do provedor de IA. Não publique relatórios, currículos, links temporários ou credenciais em repositórios abertos. O consentimento MCP não libera faturamento, habilitação comercial de módulos nem alterações no aplicativo do candidato ou no extrator.</p>
 
 <h3 id="mcp-erros" tabindex="-1">Tratamento de erros e reconexão</h3>
 <p>Observe o resultado MCP e o estado da operação, além do status HTTP. Uma resposta HTTP 200 pode conter um erro de ferramenta ou uma operação que falhou. A mensagem “conexão expirada” exibida pelo cliente também pode envolver falta de escopo; consulte o contexto e o consentimento.</p>
 <div class="table-scroll" role="region" aria-label="Diagnóstico de problemas da conexão MCP" tabindex="0"><table><thead><tr><th scope="col">Sintoma</th><th scope="col">O que verificar</th></tr></thead><tbody>
+<tr><td>Convite não chegou</td><td>Confira o e-mail cadastrado na SophIA e a pasta de spam. A equipe verifica o estado de entrega e pode reenviar. “Enviado” significa aceite pelo provedor, não entrega comprovada.</td></tr>
+<tr><td>Link de ativação expirado, utilizado ou substituído</td><td>Use somente o convite mais recente. Se ainda não houve aceite, peça reenvio à equipe enquanto a validade final permitir; se o acesso já venceu, peça nova credencial. Abrir o link não estende o prazo.</td></tr>
+<tr><td>Segredo perdido depois do aceite</td><td>Não há recuperação do segredo anterior. A equipe usa <strong>Novo segredo</strong>, que revoga o acesso anterior e envia outro convite para aceite.</td></tr>
+<tr><td>Credencial revogada ou arquivada</td><td>Solicite nova credencial. Reconectar o assistente ou reenviar uma solicitação não reativa esse acesso.</td></tr>
+<tr><td>URL do convite diferente da cadastrada no assistente</td><td>Use a URL oficial exibida após o aceite ou confirmada pela equipe. Não misture domínio próprio e Heroku no mesmo fluxo. Após uma troca da origem oficial, atualize a conexão e conclua nova autorização.</td></tr>
 <tr><td>404 na conexão ou POST na raiz</td><td>Confirme o caminho <code>/mcp</code>, em vez da raiz ou <code>/admin</code>.</td></tr>
 <tr><td>GET /mcp não abre uma página</td><td>O endpoint é um transporte MCP. Abrir no navegador não equivale a conectar um cliente; use o cadastro de conector e OAuth.</td></tr>
 <tr><td>401 / token inválido</td><td>Sem token, expirado, revogado ou pertencente a outro recurso. Um 401 inicial faz parte da descoberta OAuth; repetição após autenticar exige verificar a conexão.</td></tr>
 <tr><td>403 / insufficient_scope</td><td>Compare <code>scopes</code> e <code>scopes_disponiveis</code>. Reconecte e aprove os acessos necessários na página SophIA; não basta o perfil ser administrador.</td></tr>
 <tr><td>Claude consulta, mas não cria vagas</td><td>Autorize <strong>Criar e alterar dados</strong> nos acessos adicionais. Remova/adicione novamente somente se for necessário para abrir o consentimento.</td></tr>
 <tr><td>Escrita autorizada, mas token ainda só leitura</td><td>Conclua o retorno ao cliente e inicie uma conversa nova. O suporte pode conferir se o cliente solicita explicitamente um token restrito durante a troca ou renovação.</td></tr>
-<tr><td>Credencial inválida ou sem acessos</td><td>ID e segredo mais recentes, validade, usuário ativo, troca da senha temporária e permissões da credencial. Desmarque opções que sua credencial não permite ou solicite revisão à equipe.</td></tr>
+<tr><td>Credencial inválida ou sem acessos</td><td>Confira o aceite concluído, o ID e o segredo mais recentes, a validade, o usuário ativo, a troca da senha temporária e as permissões da credencial. Uma credencial pendente ainda não permite autenticação. Desmarque opções que sua credencial não permite ou solicite revisão à equipe.</td></tr>
 <tr><td>Origem ou retorno OAuth inválido</td><td>Reinicie a conexão a partir do cliente. A equipe técnica deve conferir a origem HTTPS pública e o callback permitido; não use URLs de callback como comandos de terminal.</td></tr>
 <tr><td>Erro 400 / argumentos inválidos</td><td>Consulte o schema atual, tipos de IDs, enumerações, campos obrigatórios e datas. Atualize o catálogo da conexão.</td></tr>
 <tr><td>Erro 409 / conflito de solicitação</td><td>O mesmo <code>request_id</code> foi usado com conteúdo diferente. Consulte a operação original antes de criar uma nova.</td></tr>
@@ -1777,6 +1835,7 @@ sem imagem, e mostre a prévia. Aguarde minha aprovação para publicar.
 <tr><td>Estado uncertain</td><td>Confira painel e provedor. Não trate como falha definitiva nem repita automaticamente um envio.</td></tr>
 <tr><td>Download expirado</td><td>Peça outro link por <code>sophia_arquivo</code> enquanto o artefato estiver válido; após expirar o registro, avalie gerar o arquivo novamente.</td></tr>
 <tr><td>LinkedIn ou Currículo Match falha</td><td>Verifique a tarefa, a integração externa e o módulo da empresa. Credenciais OAuth do MCP não substituem a conexão do provedor.</td></tr>
+<tr><td>Arquivamento indisponível na gestão interna</td><td>A equipe técnica verifica se a migração <code>2026-10-01_mcp_credential_archive.sql</code> foi aplicada no banco correto. Usuários finais não precisam executar SQL.</td></tr>
 </tbody></table></div>
 <p>Para desenvolvedores: o desafio de escopo usa HTTP 403 com <code>WWW-Authenticate</code> para clientes genéricos. O ChatGPT recebe a sinalização compatível em <code>_meta["mcp/www_authenticate"]</code>. Cabe ao cliente conduzir a nova autorização. Um cliente que solicite explicitamente um escopo reduzido continua recebendo acesso reduzido, mesmo que uma concessão anterior seja mais ampla.</p>
 <p>O suporte pode usar o log <code>[OAUTH] token_issued</code>, que registra somente <code>grant_type</code>, <code>requested_scope</code>, <code>access_scope</code> e <code>refresh_scope</code>. <code>requested_scope: null</code> indica que o parâmetro foi omitido. Nunca envie tokens, códigos de autorização, segredos ou corpos completos de requisição para diagnóstico.</p>
@@ -1784,14 +1843,15 @@ sem imagem, e mostre a prévia. Aguarde minha aprovação para publicar.
 <h3 id="mcp-suporte" tabindex="-1">Validação, suporte e referências</h3>
 <p>Antes de disponibilizar a conexão para uma equipe:</p>
 <ol>
+<li>Valide o convite por e-mail, o prazo, o aceite e a exibição única da URL, ID e segredo, sem compartilhar esses dados em chamados.</li>
 <li>Confirme empresa, usuário e permissões pelo contexto, usando uma credencial por pessoa.</li>
 <li>Valide uma consulta e compare os dados com o painel no mesmo ambiente.</li>
 <li>Teste uma alteração autorizada e acompanhe a operação até o resultado final.</li>
 <li>Para arquivos e envios, valide upload/download, destinatário ou conta de destino e acompanhamento da tarefa externa.</li>
-<li>Confirme que um perfil restrito e uma segunda empresa não acessam registros indevidos, e que revogar uma credencial interrompe novas operações.</li>
+<li>Em testes autorizados, confirme que um perfil restrito e uma segunda empresa não acessam registros indevidos, e que revogar ou arquivar uma credencial interrompe novos acessos e invalida os convites pendentes.</li>
 </ol>
 <p>Em um chamado, informe o cliente utilizado (ChatGPT, Claude ou outro), horário com fuso, ferramenta, código/status do erro, <code>operation_id</code> ou ID da requisição quando disponível e passos para reproduzir. Utilize o contato técnico da sua conta, conforme o <a href="#suporte">capítulo de suporte</a>. Não envie credenciais nem relatórios pessoais completos.</p>
-<p>As instruções de interface foram conferidas em 29/09/2026. Nomes dos menus e disponibilidade podem mudar; a documentação oficial do cliente complementa este guia:</p>
+<p>As instruções de interface foram conferidas em 30/09/2026. Nomes dos menus e disponibilidade podem mudar; a documentação oficial do cliente complementa este guia:</p>
 <ul>
 <li><a href="https://developers.openai.com/plugins/deploy/connect-chatgpt">OpenAI — conectar e testar um plugin no ChatGPT</a>.</li>
 <li><a href="https://developers.openai.com/plugins/build/auth">OpenAI — autenticação OAuth de plugins</a>.</li>
